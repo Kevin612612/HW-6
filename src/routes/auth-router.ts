@@ -18,15 +18,11 @@ authRouter.post('/',
     usersPasswordValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
-        const errors = validationResult(req)
+        const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         let {loginOrEmail, password} = req.body

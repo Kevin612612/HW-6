@@ -1,11 +1,18 @@
 //Data access Layer
 
 
+
+//(1) allUsers
+//(2) newPostedUser
+//(3) deleteUser
+//(4) findUserByLoginOrEmail
+
 import {userDataModel, usersCollection, userViewModel} from "./mongodb";
 
 
 export const usersRepository = {
-    //GET
+
+    //(1) method returns array of users
     async allUsers(searchLoginTerm: string, searchEmailTerm: string, sortBy: string, sortDirection: string, filter: any): Promise<userViewModel[]> {
         const order = (sortDirection === 'asc') ? 1 : -1
 
@@ -18,24 +25,24 @@ export const usersRepository = {
 
 
 
-    //POST
-    async newUser(newUser: userDataModel): Promise<boolean> {
+    //(2) method creates user
+    async newPostedUser(newUser: userDataModel): Promise<boolean> {
         const result = await usersCollection.insertOne(newUser)
         return result.acknowledged;
     },
 
 
 
-    //DELETE by ID
-    async delUser(id: string): Promise<boolean | number> {
+    //(3) method  delete user by Id
+    async deleteUser(id: string): Promise<boolean | number> {
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
 
 
 
-    //GET by loginOrEmail
-    async FindByLoginOrEmail(loginOrEmail: string): Promise<userDataModel | undefined> {
+    //(4) method returns user by loginOrEmail
+    async findUserByLoginOrEmail(loginOrEmail: string): Promise<userDataModel | undefined> {
         const result = await usersCollection.findOne({$or: [{login: {$regex : loginOrEmail}}, {email: {$regex : loginOrEmail}}]})
         return result ? result : undefined
     },

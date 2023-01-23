@@ -11,12 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersRouter = void 0;
+//(1)get     returns all users
+//(2)post    create new user
+//(3)delete  delete user by ID
 const express_1 = require("express");
 const users_BLL_1 = require("../BLL/users-BLL");
 const input_validation_middleware_1 = require("../middleware/input-validation-middleware");
 const express_validator_1 = require("express-validator");
 exports.usersRouter = (0, express_1.Router)({});
-//return all users
+//(1) return all users
 exports.usersRouter.get('/', input_validation_middleware_1.authorization, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     let { pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm, searchEmailTerm } = req.query;
@@ -27,22 +30,18 @@ exports.usersRouter.get('/', input_validation_middleware_1.authorization, (req, 
     const e = searchLoginTerm ? searchLoginTerm : null;
     const f = searchEmailTerm ? searchEmailTerm : null;
     //BLL
-    const allUsers = yield users_BLL_1.userBusinessLayer.createAllRequiredUsers(a, b, c, d, e, f);
+    const allUsers = yield users_BLL_1.userBusinessLayer.allUsers(a, b, c, d, e, f);
     //RETURN
     res.status(200).send(allUsers);
 }));
-//create new user
+//(2) create new user
 exports.usersRouter.post('/', input_validation_middleware_1.authorization, input_validation_middleware_1.usersLoginValidation, input_validation_middleware_1.usersPasswordValidation, input_validation_middleware_1.usersEmailValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(400).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(400).json(result);
     }
     //INPUT
     let { id, login, password, email } = req.body;
@@ -51,18 +50,14 @@ exports.usersRouter.post('/', input_validation_middleware_1.authorization, input
     //RETURN
     res.status(201).send(user);
 }));
-//delete user bu ID
+//(3) delete user bu ID
 exports.usersRouter.delete('/:userId', input_validation_middleware_1.authorization, input_validation_middleware_1.usersIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(400).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(400).json(result);
     }
     //INPUT
     const id = req.params.userId;

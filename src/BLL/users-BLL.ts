@@ -1,5 +1,11 @@
 //Business Layer
 
+
+
+//(1) allUsers
+//(2) newPostedUser
+//(3) deleteUser
+
 import {userViewModel, UsersTypeSchema, usersCollection} from "../repositories/mongodb";
 import {usersRepository} from "../repositories/users-repository-db";
 import bcrypt from "bcrypt"
@@ -8,8 +14,9 @@ let countOfUsers = 0
 
 
 export const userBusinessLayer = {
-    //this method returns all users to router
-    async createAllRequiredUsers(pageNumber: any, pageSize: any, sortBy: any, sortDirection: any, searchLoginTerm: any, searchEmailTerm: any): Promise<UsersTypeSchema> {
+
+    //(1) this method returns all users to router
+    async allUsers(pageNumber: any, pageSize: any, sortBy: any, sortDirection: any, searchLoginTerm: any, searchEmailTerm: any): Promise<UsersTypeSchema> {
         let filter = {}
         if (searchLoginTerm && searchEmailTerm) {
             filter = {$or: [{login: {$regex : searchLoginTerm, $options:'i'}}, {email: {$regex : searchEmailTerm, $options:'i'}}]}
@@ -48,7 +55,7 @@ export const userBusinessLayer = {
 
 
 
-    //method creates user
+    //(2) method creates user
     async newPostedUser(id: string, login: string, password: string, email: string): Promise<userViewModel | number> {
         countOfUsers++
 
@@ -65,7 +72,7 @@ export const userBusinessLayer = {
             createdAt: new Date()
         }
 
-        const inserted = await usersRepository.newUser(newUser)
+        const inserted = await usersRepository.newPostedUser(newUser)
 
         if (inserted) {
             return {
@@ -78,15 +85,12 @@ export const userBusinessLayer = {
             return 404
         }
     },
-    // async _generateHash(password: string, salt: string) {
-    //     return await bcrypt.hash(password, salt)
-    // },
 
 
 
-    //method deletes by ID
+    //(3) method deletes by ID
     async deleteUser(id: string): Promise<boolean | number> {
-        const result = await usersRepository.delUser(id)
+        const result = await usersRepository.deleteUser(id)
         return result ? result : 404
     },
 }

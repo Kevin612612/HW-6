@@ -2,14 +2,19 @@
 
 
 
-import {blogsCollection, blogViewModel} from "./mongodb";
+//(1) allBlogs
+//(2) newPostedBlog
+//(3) findBlogById
+//(4) updateBlogById
+//(5) deleteBlog
 
+import {blogsCollection, blogViewModel} from "./mongodb";
 
 
 
 export const blogsRepository = {
 
-    //method returns structured Array
+    //(1) method returns structured Array
     async allBlogs(searchNameTerm: string, sortBy: string, sortDirection: string): Promise<blogViewModel[]> {
         const order = sortDirection == 'asc' ? 1 : -1; // порядок сортировки
         return await blogsCollection
@@ -20,7 +25,7 @@ export const blogsRepository = {
 
 
 
-    //method posts new blog in Db
+    //(2) method posts new blog in Db
     async newPostedBlog(newBlog: blogViewModel): Promise<boolean> {
         const result = await blogsCollection.insertOne(newBlog)
         return result.acknowledged;
@@ -28,16 +33,16 @@ export const blogsRepository = {
 
 
 
-    //method returns blog by ID
-    async getBlogById(id: string): Promise<blogViewModel | undefined> {
+    //(3) method returns blog by ID
+    async findBlogById(id: string): Promise<blogViewModel | undefined> {
         const result = await blogsCollection.findOne({id: id}, {projection: {_id: 0}})
         return result ? result : undefined
     },
 
 
 
-    //method updates blog by ID
-    async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean | number> {
+    //(4) method updates blog by ID
+    async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean | number> {
         const result = await blogsCollection.updateOne({id: id}, {
             $set: {
                 name: name,
@@ -48,7 +53,7 @@ export const blogsRepository = {
         return result.matchedCount === 1
     },
 
-    //method deletes by ID
+    //(5) method deletes by ID
     async deleteBlog(id: string): Promise<boolean | number> {
         const result = await blogsCollection.deleteOne({id: id})
         return result.deletedCount === 1

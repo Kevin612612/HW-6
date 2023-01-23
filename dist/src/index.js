@@ -17,10 +17,11 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const auth_router_1 = require("./routes/auth-router");
+const users_router_1 = require("./routes/users-router");
 const blogs_router_1 = require("./routes/blogs-router");
 const posts_router_1 = require("./routes/posts-router");
+const comments_router_1 = require("./routes/comments-router");
 const testing_router_1 = require("./routes/testing-router");
-const users_router_1 = require("./routes/users-router");
 const mongodb_1 = require("./repositories/mongodb");
 exports.app = (0, express_1.default)();
 const corsMiddleware = (0, cors_1.default)();
@@ -29,7 +30,7 @@ const jsonBodyMiddleware = body_parser_1.default.json();
 exports.app.use(jsonBodyMiddleware);
 //PORT
 const port = process.env.PORT || 3000;
-//GREETING PAGE
+//HOME PAGE
 exports.app.get('/', (req, res) => {
     res.send(`<div style="background-color: darkorchid">
 <h1 style="background-color: chartreuse">Home page<h1>
@@ -37,11 +38,12 @@ exports.app.get('/', (req, res) => {
 });
 //ROUTES
 exports.app.use('/auth/login', auth_router_1.authRouter);
+exports.app.use('/users', users_router_1.usersRouter);
 exports.app.use('/blogs', blogs_router_1.blogsRouter);
 exports.app.use('/posts', posts_router_1.postsRouter);
-exports.app.use('/users', users_router_1.usersRouter);
+exports.app.use('/comments', comments_router_1.commentsRouter);
 exports.app.use('/testing', testing_router_1.testingRouter);
-//START APP FUNCTION
+//START-APP FUNCTION
 const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
     //wait while DB is connected
     yield (0, mongodb_1.runDb)();

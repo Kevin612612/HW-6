@@ -11,9 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
+//(1) allPosts
+//(2) allPostByBlogId
+//(3) newPostedPost
+//(4) findPostById
+//(5) updatePostById
+//(6) deletePost
 const mongodb_1 = require("./mongodb");
 exports.postsRepository = {
-    //method returns posts by blogID
+    //(1) method returns posts by blogID
     allPosts(blogId, sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
             const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
@@ -23,8 +29,8 @@ exports.postsRepository = {
                 .toArray();
         });
     },
-    //method returns all posts
-    everyPosts(sortBy, sortDirection) {
+    //(2) method returns all posts
+    allPostByBlogId(sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
             const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
             return yield mongodb_1.postsCollection
@@ -33,22 +39,22 @@ exports.postsRepository = {
                 .toArray();
         });
     },
-    //method posts new post in Db
-    newAddedPost(newPost) {
+    //(3) method posts new post
+    newPostedPost(newPost) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.postsCollection.insertOne(newPost);
             return result.acknowledged;
         });
     },
-    //method returns post by ID
-    getPostById(id) {
+    //(4) method returns post by ID
+    findPostById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const post = yield mongodb_1.postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
             return post ? post : 404;
         });
     },
-    //method updates post by ID
-    updatePost(postId, title, shortDescription, content, blogId) {
+    //(5) method updates post by ID
+    updatePostById(postId, title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
             const blogFoundName = yield mongodb_1.blogsCollection.findOne({ id: blogId });
             let postFound;
@@ -76,7 +82,7 @@ exports.postsRepository = {
             }
         });
     },
-    //method deletes by ID
+    //(6) method deletes by ID
     deletePost(postId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.postsCollection.deleteOne({ id: postId });

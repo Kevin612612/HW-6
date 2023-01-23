@@ -14,9 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.jwtService = void 0;
+//(1) create token
+//(2) method returns user by token
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 exports.jwtService = {
-    //create token
+    //(1) create token
     createJWT(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = { userId: user.id,
@@ -26,7 +28,7 @@ exports.jwtService = {
             return jsonwebtoken_1.default.sign(payload, secretOrPrivateKey, { expiresIn: '1h' });
         });
     },
-    //method return user by token
+    //(2) method return user by token
     getUserByToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

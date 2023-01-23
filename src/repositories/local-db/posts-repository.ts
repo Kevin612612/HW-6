@@ -2,7 +2,7 @@
 
 
 import {blogs} from "./blogs-repository";
-import {postViewModel} from "./mongodb";
+import {postViewModel} from "../mongodb";
 
 export let posts: Array<postViewModel> = [
     {

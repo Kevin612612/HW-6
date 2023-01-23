@@ -1,17 +1,23 @@
 //Presentation Layer
 
 
+//(1)get     returns all blogs
+//(2)post    create  new blog
+//(3)get     returns all posts by specific blog
+//(4)post    create  new post for specific blog
+//(5)get     returns blog by blogId
+//(6)put     update  existing by blogId
+//(7)delete  delete  blog by blogId
+
 import {Request, Response, Router} from "express";
-import {
-    authorization,
+import {authorization,
     descriptionValidation,
     blogsIdValidation,
     nameValidation,
     newWebSiteUrlValidation,
     titleValidation,
     shortDescriptionValidation,
-    contentValidation
-} from "../middleware/input-validation-middleware";
+    contentValidation} from "../middleware/input-validation-middleware";
 import {blogBusinessLayer} from "../BLL/blogs-BLL";
 import {postBusinessLayer} from "../BLL/posts-BLL";
 import {validationResult} from "express-validator";
@@ -19,7 +25,7 @@ import {validationResult} from "express-validator";
 export const blogsRouter = Router({})
 
 
-//returns all blogs with paging
+//(1) returns all blogs with paging
 blogsRouter.get('/', async (req: Request, res: Response) => {
     //INPUT
     const searchNameTerm = req.query.searchNameTerm ? req.query.searchNameTerm : "";
@@ -28,13 +34,13 @@ blogsRouter.get('/', async (req: Request, res: Response) => {
     const pageNumber = req.query.pageNumber ? req.query.pageNumber : '1';
     const pageSize = req.query.pageSize ? req.query.pageSize : "10";
     //BLL
-    const allBlogs = await blogBusinessLayer.createAllRequiredBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+    const allBlogs = await blogBusinessLayer.allBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
     //RETURN
     res.status(200).send(allBlogs)
 })
 
 
-//create new blog
+//(2) create new blog
 blogsRouter.post('/',
     authorization,
     newWebSiteUrlValidation,
@@ -44,13 +50,9 @@ blogsRouter.post('/',
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         let {name, description, websiteUrl, id} = req.body
@@ -61,20 +63,16 @@ blogsRouter.post('/',
     })
 
 
-//returns all posts by specific blog
+//(3) returns all posts by specific blog
 blogsRouter.get('/:blogId/posts',
     blogsIdValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(404).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(404).json(result)
         }
         //INPUT
         const pageNumber = req.query.pageNumber ? req.query.pageNumber : "1";
@@ -83,13 +81,13 @@ blogsRouter.get('/:blogId/posts',
         const sortDirection = req.query.sortDirection ? req.query.sortDirection : "desc";
         const blogId = req.params.blogId
         //BLL
-        const posts = await postBusinessLayer.getAllPostByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection)
+        const posts = await blogBusinessLayer.allPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection)
         //RETURN
         res.status(200).send(posts)
     })
 
 
-//create new post for specific blog
+//(4) create new post for specific blog
 blogsRouter.post('/:blogId/posts',
     authorization,
     titleValidation,
@@ -99,13 +97,9 @@ blogsRouter.post('/:blogId/posts',
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         const blogId = req.params.blogId
@@ -117,20 +111,16 @@ blogsRouter.post('/:blogId/posts',
     })
 
 
-//returns blog by blogId
+//(5) returns blog by blogId
 blogsRouter.get('/:blogId',
     blogsIdValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         const id = req.params.blogId
@@ -141,7 +131,7 @@ blogsRouter.get('/:blogId',
     })
 
 
-//update existing blog by Id with InputModel
+//(6) update existing blog by blogId with InputModel
 blogsRouter.put('/:blogId',
     authorization,
     blogsIdValidation,
@@ -152,13 +142,9 @@ blogsRouter.put('/:blogId',
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         const id = req.params.blogId
@@ -170,7 +156,7 @@ blogsRouter.put('/:blogId',
     })
 
 
-//delete blog by Id
+//(7) delete blog by blogId
 blogsRouter.delete('/:blogId',
     authorization,
     blogsIdValidation,
@@ -178,13 +164,9 @@ blogsRouter.delete('/:blogId',
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         const id = req.params.blogId;

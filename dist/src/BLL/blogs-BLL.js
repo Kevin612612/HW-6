@@ -11,12 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogBusinessLayer = void 0;
+//(1) allBlogs
+//(2) newPostedBlog
+//(3) allPostsByBlogId
+//(4) newPostedPostByBlogId
+//(5) findBlogById
+//(6) updateBlogById
+//(7) deleteBlog
 const mongodb_1 = require("../repositories/mongodb");
 const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
+const posts_repository_db_1 = require("../repositories/posts-repository-db");
 let countOfBlogs = 0;
 exports.blogBusinessLayer = {
-    //this method transform all found data and returns them to router
-    createAllRequiredBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize) {
+    //(1) this method transform all found data and returns them to router
+    allBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize) {
         return __awaiter(this, void 0, void 0, function* () {
             const sortedItems = yield blogs_repository_db_1.blogsRepository.allBlogs(searchNameTerm, sortBy, sortDirection);
             const quantityOfDocs = yield mongodb_1.blogsCollection.countDocuments({ name: { $regex: searchNameTerm, $options: 'i' } });
@@ -29,7 +37,7 @@ exports.blogBusinessLayer = {
             };
         });
     },
-    //method creates blog
+    //(2) method creates blog
     newPostedBlog(name, description, websiteUrl, id) {
         return __awaiter(this, void 0, void 0, function* () {
             countOfBlogs++;
@@ -56,21 +64,43 @@ exports.blogBusinessLayer = {
             }
         });
     },
-    //method take blog by blogId
+    //(3) this method return all posts by blogId
+    allPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const blog = yield blogs_repository_db_1.blogsRepository.findBlogById(blogId);
+            if (blog != undefined) {
+                const sortedItems = yield posts_repository_db_1.postsRepository.allPosts(blogId, sortBy, sortDirection);
+                const quantityOfDocs = yield mongodb_1.postsCollection.countDocuments({ blogId: blogId });
+                return {
+                    pagesCount: Math.ceil(quantityOfDocs / +pageSize),
+                    page: +pageNumber,
+                    pageSize: +pageSize,
+                    totalCount: quantityOfDocs,
+                    items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
+                };
+            }
+            else {
+                return 404;
+            }
+        });
+    },
+    //(4) method create new post by blogId
+    // this method is equal to post-BLL method
+    //(5) method take blog by blogId
     findBlogById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield blogs_repository_db_1.blogsRepository.getBlogById(id);
+            const result = yield blogs_repository_db_1.blogsRepository.findBlogById(id);
             return result ? result : 404;
         });
     },
-    //method updates blog by ID
+    //(6) method updates blog by ID
     updateBlogById(id, name, description, websiteUrl) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield blogs_repository_db_1.blogsRepository.updateBlog(id, name, description, websiteUrl);
+            const result = yield blogs_repository_db_1.blogsRepository.updateBlogById(id, name, description, websiteUrl);
             return result ? result : 404;
         });
     },
-    //method deletes by ID
+    //(7) method deletes by ID
     deleteBlog(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield blogs_repository_db_1.blogsRepository.deleteBlog(id);

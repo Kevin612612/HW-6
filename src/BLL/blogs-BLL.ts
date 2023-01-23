@@ -1,19 +1,35 @@
 //Business Layer
 
-import {blogViewModel, blogsTypeSchema, blogsCollection} from "../repositories/mongodb";
+
+
+//(1) allBlogs
+//(2) newPostedBlog
+//(3) allPostsByBlogId
+//(4) newPostedPostByBlogId
+//(5) findBlogById
+//(6) updateBlogById
+//(7) deleteBlog
+
+import {
+    blogViewModel,
+    blogsTypeSchema,
+    blogsCollection,
+    PostsTypeSchema,
+    postsCollection, commentViewModel, postViewModel
+} from "../repositories/mongodb";
 import {blogsRepository} from "../repositories/blogs-repository-db";
+import {postsRepository} from "../repositories/posts-repository-db";
+import {commentsRepository} from "../repositories/comments-repository-db";
 
 let countOfBlogs = 0
 
 
 export const blogBusinessLayer = {
-    //this method transform all found data and returns them to router
-    async createAllRequiredBlogs(searchNameTerm: any, sortBy: any, sortDirection: any, pageNumber: any, pageSize: any): Promise<blogsTypeSchema> {
 
-
+    //(1) this method transform all found data and returns them to router
+    async allBlogs(searchNameTerm: any, sortBy: any, sortDirection: any, pageNumber: any, pageSize: any): Promise<blogsTypeSchema> {
         const sortedItems = await blogsRepository.allBlogs(searchNameTerm, sortBy, sortDirection);
         const quantityOfDocs = await blogsCollection.countDocuments({name : {$regex : searchNameTerm, $options:'i'}})
-
         return {
             pagesCount:	Math.ceil(quantityOfDocs/+pageSize),
             page:  +pageNumber,
@@ -25,7 +41,7 @@ export const blogBusinessLayer = {
 
 
 
-    //method creates blog
+    //(2) method creates blog
     async newPostedBlog(name: string,
                         description: string,
                         websiteUrl: string,
@@ -59,23 +75,53 @@ export const blogBusinessLayer = {
 
 
 
-    //method take blog by blogId
+    //(3) this method return all posts by blogId
+    async allPostsByBlogId(blogId: any,
+                          pageNumber: any,
+                          pageSize: any,
+                          sortBy: any,
+                          sortDirection: any): Promise<PostsTypeSchema | number> {
+        const blog = await blogsRepository.findBlogById(blogId)
+        if (blog != undefined) {
+            const sortedItems = await postsRepository.allPosts(blogId, sortBy, sortDirection);
+            const quantityOfDocs = await postsCollection.countDocuments({blogId : blogId})
+
+            return {
+                pagesCount: Math.ceil(quantityOfDocs / +pageSize),
+                page: +pageNumber,
+                pageSize: +pageSize,
+                totalCount: quantityOfDocs,
+                items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
+            }
+        } else {
+            return 404
+        }
+    },
+
+
+
+    //(4) method create new post by blogId
+    // this method is equal to post-BLL method
+
+
+
+    //(5) method take blog by blogId
     async findBlogById(id: string): Promise<blogViewModel | null | number> {
-        const result = await blogsRepository.getBlogById(id)
+        const result = await blogsRepository.findBlogById(id)
         return result ? result : 404
     },
 
 
 
-    //method updates blog by ID
+    //(6) method updates blog by ID
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean | number> {
-        const result = await blogsRepository.updateBlog(id, name, description, websiteUrl)
+        const result = await blogsRepository.updateBlogById(id, name, description, websiteUrl)
         return result ? result : 404
     },
 
 
 
-    //method deletes by ID
+    //(7) method deletes by ID
     async deleteBlog(id: string): Promise<boolean | number> {
         const result = await blogsRepository.deleteBlog(id)
         return result ? result : 404

@@ -14,14 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authBusinessLayer = void 0;
+//(1) Does user exist and password correct
 const users_repository_db_1 = require("../repositories/users-repository-db");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 exports.authBusinessLayer = {
-    //Does user exist and password correct
+    //(1) Does user exist and password correct
     IsUserExist(loginOrEmail, password) {
         return __awaiter(this, void 0, void 0, function* () {
             //находим пользователя по логину или email
-            const user = yield users_repository_db_1.usersRepository.FindByLoginOrEmail(loginOrEmail);
+            const user = yield users_repository_db_1.usersRepository.findUserByLoginOrEmail(loginOrEmail);
             //если такой есть то сравниваем его хэш с хэшом введенного пароля
             if (user) {
                 const passwordHash = yield bcrypt_1.default.hash(password, user.passwordSalt);

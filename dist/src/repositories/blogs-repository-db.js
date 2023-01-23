@@ -11,9 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepository = void 0;
+//(1) allBlogs
+//(2) newPostedBlog
+//(3) findBlogById
+//(4) updateBlogById
+//(5) deleteBlog
 const mongodb_1 = require("./mongodb");
 exports.blogsRepository = {
-    //method returns structured Array
+    //(1) method returns structured Array
     allBlogs(searchNameTerm, sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
             const order = sortDirection == 'asc' ? 1 : -1; // порядок сортировки
@@ -23,22 +28,22 @@ exports.blogsRepository = {
                 .toArray();
         });
     },
-    //method posts new blog in Db
+    //(2) method posts new blog in Db
     newPostedBlog(newBlog) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.blogsCollection.insertOne(newBlog);
             return result.acknowledged;
         });
     },
-    //method returns blog by ID
-    getBlogById(id) {
+    //(3) method returns blog by ID
+    findBlogById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.blogsCollection.findOne({ id: id }, { projection: { _id: 0 } });
             return result ? result : undefined;
         });
     },
-    //method updates blog by ID
-    updateBlog(id, name, description, websiteUrl) {
+    //(4) method updates blog by ID
+    updateBlogById(id, name, description, websiteUrl) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.blogsCollection.updateOne({ id: id }, {
                 $set: {
@@ -50,7 +55,7 @@ exports.blogsRepository = {
             return result.matchedCount === 1;
         });
     },
-    //method deletes by ID
+    //(5) method deletes by ID
     deleteBlog(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.blogsCollection.deleteOne({ id: id });

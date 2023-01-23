@@ -1,12 +1,20 @@
 //Data access Layer
 
 
+
+//(1) allPosts
+//(2) allPostByBlogId
+//(3) newPostedPost
+//(4) findPostById
+//(5) updatePostById
+//(6) deletePost
+
 import {blogsCollection, postsCollection, postViewModel} from "./mongodb";
 
 
 export const postsRepository = {
 
-    //method returns posts by blogID
+    //(1) method returns posts by blogID
     async allPosts(blogId: string, sortBy: any, sortDirection: any): Promise<postViewModel[]> {
         const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
         return await postsCollection
@@ -16,8 +24,8 @@ export const postsRepository = {
     },
 
 
-    //method returns all posts
-    async everyPosts(sortBy: any, sortDirection: any): Promise<postViewModel[]> {
+    //(2) method returns all posts
+    async allPostByBlogId(sortBy: any, sortDirection: any): Promise<postViewModel[]> {
         const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
         return await postsCollection
             .find({}, {projection: {_id: 0}})
@@ -27,24 +35,24 @@ export const postsRepository = {
 
 
 
-    //method posts new post in Db
-    async newAddedPost(newPost: postViewModel): Promise<boolean> {
+    //(3) method posts new post
+    async newPostedPost(newPost: postViewModel): Promise<boolean> {
         const result = await postsCollection.insertOne(newPost)
         return result.acknowledged;
     },
 
 
 
-    //method returns post by ID
-    async getPostById(id: string): Promise<postViewModel | number> {
+    //(4) method returns post by ID
+    async findPostById(id: string): Promise<postViewModel | number> {
         const post = await postsCollection.findOne({id: id}, {projection: {_id: 0}})
         return post ? post : 404
     },
 
 
 
-    //method updates post by ID
-    async updatePost(postId: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean | number> {
+    //(5) method updates post by ID
+    async updatePostById(postId: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean | number> {
 
         const blogFoundName = await blogsCollection.findOne({id: blogId})
         let postFound
@@ -70,7 +78,7 @@ export const postsRepository = {
         }
     },
 
-    //method deletes by ID
+    //(6) method deletes by ID
     async deletePost(postId: string): Promise<boolean | number> {
         const result = await postsCollection.deleteOne({id: postId})
         return result.deletedCount ? result.deletedCount === 1 : 404

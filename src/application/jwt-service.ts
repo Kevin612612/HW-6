@@ -2,11 +2,15 @@
 
 
 
+//(1) create token
+//(2) method returns user by token
+
 import jwt from 'jsonwebtoken'
 import {userDataModel} from "../repositories/mongodb";
 
 export const jwtService = {
-    //create token
+
+    //(1) create token
     async createJWT(user: userDataModel) {
         const payload = {userId: user.id,
                         login: user.login,
@@ -17,7 +21,7 @@ export const jwtService = {
 
 
 
-    //method return user by token
+    //(2) method return user by token
     async getUserByToken(token: string) {
         try {
             const result: any = jwt.verify(token, process.env.JWT_secret!)

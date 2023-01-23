@@ -11,9 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersRepository = void 0;
+//(1) allUsers
+//(2) newPostedUser
+//(3) deleteUser
+//(4) findUserByLoginOrEmail
 const mongodb_1 = require("./mongodb");
 exports.usersRepository = {
-    //GET
+    //(1) method returns array of users
     allUsers(searchLoginTerm, searchEmailTerm, sortBy, sortDirection, filter) {
         return __awaiter(this, void 0, void 0, function* () {
             const order = (sortDirection === 'asc') ? 1 : -1;
@@ -23,22 +27,22 @@ exports.usersRepository = {
                 .toArray();
         });
     },
-    //POST
-    newUser(newUser) {
+    //(2) method creates user
+    newPostedUser(newUser) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.usersCollection.insertOne(newUser);
             return result.acknowledged;
         });
     },
-    //DELETE by ID
-    delUser(id) {
+    //(3) method  delete user by Id
+    deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.usersCollection.deleteOne({ id: id });
             return result.deletedCount === 1;
         });
     },
-    //GET by loginOrEmail
-    FindByLoginOrEmail(loginOrEmail) {
+    //(4) method returns user by loginOrEmail
+    findUserByLoginOrEmail(loginOrEmail) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.usersCollection.findOne({ $or: [{ login: { $regex: loginOrEmail } }, { email: { $regex: loginOrEmail } }] });
             return result ? result : undefined;

@@ -14,13 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userBusinessLayer = void 0;
+//(1) allUsers
+//(2) newPostedUser
+//(3) deleteUser
 const mongodb_1 = require("../repositories/mongodb");
 const users_repository_db_1 = require("../repositories/users-repository-db");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 let countOfUsers = 0;
 exports.userBusinessLayer = {
-    //this method returns all users to router
-    createAllRequiredUsers(pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm, searchEmailTerm) {
+    //(1) this method returns all users to router
+    allUsers(pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm, searchEmailTerm) {
         return __awaiter(this, void 0, void 0, function* () {
             let filter = {};
             if (searchLoginTerm && searchEmailTerm) {
@@ -53,7 +56,7 @@ exports.userBusinessLayer = {
             };
         });
     },
-    //method creates user
+    //(2) method creates user
     newPostedUser(id, login, password, email) {
         return __awaiter(this, void 0, void 0, function* () {
             countOfUsers++;
@@ -68,7 +71,7 @@ exports.userBusinessLayer = {
                 passwordHash,
                 createdAt: new Date()
             };
-            const inserted = yield users_repository_db_1.usersRepository.newUser(newUser);
+            const inserted = yield users_repository_db_1.usersRepository.newPostedUser(newUser);
             if (inserted) {
                 return {
                     id: newUser.id,
@@ -82,13 +85,10 @@ exports.userBusinessLayer = {
             }
         });
     },
-    // async _generateHash(password: string, salt: string) {
-    //     return await bcrypt.hash(password, salt)
-    // },
-    //method deletes by ID
+    //(3) method deletes by ID
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield users_repository_db_1.usersRepository.delUser(id);
+            const result = yield users_repository_db_1.usersRepository.deleteUser(id);
             return result ? result : 404;
         });
     },

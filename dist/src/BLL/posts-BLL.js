@@ -11,32 +11,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postBusinessLayer = void 0;
+//(1) allCommentsByPostId
+//(2) newPostedCommentByPostId
+//(3) allPosts
+//(4) newPostedPost
+//(5) findPostById
+//(6) updatePostById
+//(7) deletePost
 const mongodb_1 = require("../repositories/mongodb");
 const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
+const comments_repository_db_1 = require("../repositories/comments-repository-db");
 let countOfPosts = 0;
+let countOfComments = 0;
 exports.postBusinessLayer = {
-    //this method return all posts
-    getAllPosts(pageNumber, pageSize, sortBy, sortDirection) {
+    //(1) this method return all comments by postId
+    allCommentsByPostId(postId, pageNumber, pageSize, sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sortedItems = yield posts_repository_db_1.postsRepository.everyPosts(sortBy, sortDirection);
-            const quantityOfDocs = yield mongodb_1.postsCollection.countDocuments({});
-            return {
-                pagesCount: Math.ceil(quantityOfDocs / +pageSize),
-                page: +pageNumber,
-                pageSize: +pageSize,
-                totalCount: quantityOfDocs,
-                items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
-            };
-        });
-    },
-    //this method return all posts by blogId
-    getAllPostByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const blog = yield blogs_repository_db_1.blogsRepository.getBlogById(blogId);
-            if (blog != undefined) {
-                const sortedItems = yield posts_repository_db_1.postsRepository.allPosts(blogId, sortBy, sortDirection);
-                const quantityOfDocs = yield mongodb_1.postsCollection.countDocuments({ blogId: blogId });
+            const post = yield posts_repository_db_1.postsRepository.findPostById(postId);
+            if (post != 404) {
+                const sortedItems = yield comments_repository_db_1.commentsRepository.allComments(postId, sortBy, sortDirection);
+                const quantityOfDocs = yield mongodb_1.commentsCollection.countDocuments({ postId: postId });
                 return {
                     pagesCount: Math.ceil(quantityOfDocs / +pageSize),
                     page: +pageNumber,
@@ -50,11 +45,55 @@ exports.postBusinessLayer = {
             }
         });
     },
-    //method creates post with specific blogId
+    //(2) creates new comment by postId
+    newPostedCommentByPostId(postId, content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const foundPost = yield posts_repository_db_1.postsRepository.findPostById(postId);
+            const userId = '';
+            const userLogin = '';
+            countOfComments++;
+            // const idName: string = id ? id : countOfComments.toString()
+            const newComment = {
+                id: countOfComments.toString(),
+                content: content,
+                userId: userId,
+                userLogin: userLogin,
+                createdAt: new Date()
+            };
+            const inserted = yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
+            if (inserted) {
+                return {
+                    id: newComment.id,
+                    content: newComment.content,
+                    userId: newComment.userId,
+                    userLogin: newComment.userLogin,
+                    createdAt: newComment.createdAt
+                };
+            }
+            else {
+                return 404;
+            }
+        });
+    },
+    //(3) this method return all posts
+    allPosts(pageNumber, pageSize, sortBy, sortDirection) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sortedItems = yield posts_repository_db_1.postsRepository.allPostByBlogId(sortBy, sortDirection);
+            const quantityOfDocs = yield mongodb_1.postsCollection.countDocuments({});
+            return {
+                pagesCount: Math.ceil(quantityOfDocs / +pageSize),
+                page: +pageNumber,
+                pageSize: +pageSize,
+                totalCount: quantityOfDocs,
+                items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
+            };
+        });
+    },
+    //(4) method creates post with specific blogId
     newPostedPost(blogId, title, shortDescription, content) {
         return __awaiter(this, void 0, void 0, function* () {
             countOfPosts++;
-            const foundBlog = yield blogs_repository_db_1.blogsRepository.getBlogById(blogId);
+            const foundBlog = yield blogs_repository_db_1.blogsRepository.findBlogById(blogId);
             let newPost;
             if (foundBlog) {
                 newPost = {
@@ -66,7 +105,7 @@ exports.postBusinessLayer = {
                     shortDescription: shortDescription,
                     title: title,
                 };
-                const inserted = yield posts_repository_db_1.postsRepository.newAddedPost(newPost);
+                const inserted = yield posts_repository_db_1.postsRepository.newPostedPost(newPost);
                 return {
                     blogId: newPost.blogId,
                     blogName: newPost.blogName,
@@ -82,21 +121,21 @@ exports.postBusinessLayer = {
             }
         });
     },
-    //method take post by postId
+    //(5) method take post by postId
     findPostById(postId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield posts_repository_db_1.postsRepository.getPostById(postId);
+            return yield posts_repository_db_1.postsRepository.findPostById(postId);
         });
     },
-    //method updates post by ID
+    //(6) method updates post by ID
     updatePostById(postId, title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield posts_repository_db_1.postsRepository.updatePost(postId, title, shortDescription, content, blogId);
+            const result = yield posts_repository_db_1.postsRepository.updatePostById(postId, title, shortDescription, content, blogId);
             return result ? result : 404;
         });
     },
-    //method deletes by ID
-    delPost(id) {
+    //(7) method deletes by ID
+    deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield posts_repository_db_1.postsRepository.deletePost(id);
         });

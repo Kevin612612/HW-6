@@ -37,6 +37,17 @@ export type UsersTypeSchema = {pagesCount: number, page: number, pageSize: numbe
 
 
 
+//COMMENTS
+//view type
+export type commentViewModel = {id: string, content: string, userId: string, userLogin: string, createdAt: Date}
+
+//userType returned by POST-method
+export type CommentsTypeSchema = {pagesCount: number, page: number, pageSize: number, totalCount: number, items: commentViewModel[]}
+
+
+
+
+
 //APIErrorResult
 export type errors = {errorsMessages: fieldError[]}
 type fieldError = {message: string, field: string}
@@ -52,6 +63,7 @@ export const db = client.db("hosting");
 export const blogsCollection = db.collection<blogViewModel>("blogs")
 export const postsCollection = db.collection<postViewModel>("posts")
 export const usersCollection = db.collection<userDataModel>("users")
+export const commentsCollection = db.collection<commentViewModel>("comments")
 
 export async function runDb() {
     try {

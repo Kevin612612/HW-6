@@ -2,10 +2,11 @@ import express, {Request, Response} from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import {authRouter} from "./routes/auth-router";
+import {usersRouter} from "./routes/users-router";
 import {blogsRouter} from "./routes/blogs-router";
 import {postsRouter} from "./routes/posts-router";
+import {commentsRouter} from "./routes/comments-router";
 import {testingRouter} from "./routes/testing-router";
-import {usersRouter} from "./routes/users-router";
 import {runDb} from "./repositories/mongodb";
 
 
@@ -21,7 +22,7 @@ app.use(jsonBodyMiddleware)
 //PORT
 const port = process.env.PORT || 3000
 
-//GREETING PAGE
+//HOME PAGE
 app.get('/', (req: Request, res: Response) => {
     res.send(`<div style="background-color: darkorchid">
 <h1 style="background-color: chartreuse">Home page<h1>
@@ -30,13 +31,16 @@ app.get('/', (req: Request, res: Response) => {
 
 //ROUTES
 app.use('/auth/login', authRouter)
+
+app.use('/users', usersRouter)
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
-app.use('/users', usersRouter)
+app.use('/comments', commentsRouter)
+
 app.use('/testing', testingRouter)
 
 
-//START APP FUNCTION
+//START-APP FUNCTION
 const startApp = async () => {
     //wait while DB is connected
     await runDb()

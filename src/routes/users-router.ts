@@ -1,21 +1,24 @@
 //Presentation Layer
 
 
+
+//(1)get     returns all users
+//(2)post    create new user
+//(3)delete  delete user by ID
+
+
 import {Request, Response, Router} from "express";
 import {userBusinessLayer} from "../BLL/users-BLL";
-import {
-    authorization,
+import {authorization,
     usersEmailValidation, usersIdValidation,
     usersLoginValidation,
-    usersPasswordValidation
-} from "../middleware/input-validation-middleware";
+    usersPasswordValidation} from "../middleware/input-validation-middleware";
 import {validationResult} from "express-validator";
-
 
 
 export const usersRouter = Router({})
 
-//return all users
+//(1) return all users
 usersRouter.get('/',
     authorization,
     async (req: Request, res: Response) => {
@@ -28,13 +31,13 @@ usersRouter.get('/',
         const e = searchLoginTerm ? searchLoginTerm : null
         const f = searchEmailTerm ? searchEmailTerm : null
         //BLL
-        const allUsers = await userBusinessLayer.createAllRequiredUsers(a, b, c, d, e, f)
+        const allUsers = await userBusinessLayer.allUsers(a, b, c, d, e, f)
         //RETURN
         res.status(200).send(allUsers)
     })
 
 
-//create new user
+//(2) create new user
 usersRouter.post('/',
     authorization,
     usersLoginValidation,
@@ -42,15 +45,11 @@ usersRouter.post('/',
     usersEmailValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
-        const errors = validationResult(req)
+        const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         let {id, login, password, email} = req.body
@@ -58,25 +57,20 @@ usersRouter.post('/',
         const user = await userBusinessLayer.newPostedUser(id, login, password, email)
         //RETURN
         res.status(201).send(user)
-
     })
 
 
-//delete user bu ID
+//(3) delete user bu ID
 usersRouter.delete('/:userId',
     authorization,
     usersIdValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
-        const errors = validationResult(req)
+        const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            })
-            return res.status(400).send({"errorsMessages": errs})
+            const errs = errors.array({onlyFirstError: true})
+            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            return res.status(400).json(result)
         }
         //INPUT
         const id = req.params.userId

@@ -11,13 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRouter = void 0;
+//(1)get     returns all blogs
+//(2)post    create  new blog
+//(3)get     returns all posts by specific blog
+//(4)post    create  new post for specific blog
+//(5)get     returns blog by blogId
+//(6)put     update  existing by blogId
+//(7)delete  delete  blog by blogId
 const express_1 = require("express");
 const input_validation_middleware_1 = require("../middleware/input-validation-middleware");
 const blogs_BLL_1 = require("../BLL/blogs-BLL");
 const posts_BLL_1 = require("../BLL/posts-BLL");
 const express_validator_1 = require("express-validator");
 exports.blogsRouter = (0, express_1.Router)({});
-//returns all blogs with paging
+//(1) returns all blogs with paging
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     const searchNameTerm = req.query.searchNameTerm ? req.query.searchNameTerm : "";
@@ -26,22 +33,18 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const pageNumber = req.query.pageNumber ? req.query.pageNumber : '1';
     const pageSize = req.query.pageSize ? req.query.pageSize : "10";
     //BLL
-    const allBlogs = yield blogs_BLL_1.blogBusinessLayer.createAllRequiredBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize);
+    const allBlogs = yield blogs_BLL_1.blogBusinessLayer.allBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize);
     //RETURN
     res.status(200).send(allBlogs);
 }));
-//create new blog
+//(2) create new blog
 exports.blogsRouter.post('/', input_validation_middleware_1.authorization, input_validation_middleware_1.newWebSiteUrlValidation, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(400).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(400).json(result);
     }
     //INPUT
     let { name, description, websiteUrl, id } = req.body;
@@ -50,18 +53,14 @@ exports.blogsRouter.post('/', input_validation_middleware_1.authorization, input
     //RETURN
     res.status(201).send(result);
 }));
-//returns all posts by specific blog
+//(3) returns all posts by specific blog
 exports.blogsRouter.get('/:blogId/posts', input_validation_middleware_1.blogsIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(404).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(404).json(result);
     }
     //INPUT
     const pageNumber = req.query.pageNumber ? req.query.pageNumber : "1";
@@ -70,22 +69,18 @@ exports.blogsRouter.get('/:blogId/posts', input_validation_middleware_1.blogsIdV
     const sortDirection = req.query.sortDirection ? req.query.sortDirection : "desc";
     const blogId = req.params.blogId;
     //BLL
-    const posts = yield posts_BLL_1.postBusinessLayer.getAllPostByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection);
+    const posts = yield blogs_BLL_1.blogBusinessLayer.allPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection);
     //RETURN
     res.status(200).send(posts);
 }));
-//create new post for specific blog
+//(4) create new post for specific blog
 exports.blogsRouter.post('/:blogId/posts', input_validation_middleware_1.authorization, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(400).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(400).json(result);
     }
     //INPUT
     const blogId = req.params.blogId;
@@ -95,18 +90,14 @@ exports.blogsRouter.post('/:blogId/posts', input_validation_middleware_1.authori
     //RETURN
     res.status(201).send(post);
 }));
-//returns blog by blogId
+//(5) returns blog by blogId
 exports.blogsRouter.get('/:blogId', input_validation_middleware_1.blogsIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(400).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(400).json(result);
     }
     //INPUT
     const id = req.params.blogId;
@@ -115,18 +106,14 @@ exports.blogsRouter.get('/:blogId', input_validation_middleware_1.blogsIdValidat
     //RETURN
     res.status(200).send(blog);
 }));
-//update existing blog by Id with InputModel
+//(6) update existing blog by blogId with InputModel
 exports.blogsRouter.put('/:blogId', input_validation_middleware_1.authorization, input_validation_middleware_1.blogsIdValidation, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, input_validation_middleware_1.newWebSiteUrlValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(400).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(400).json(result);
     }
     //INPUT
     const id = req.params.blogId;
@@ -136,18 +123,14 @@ exports.blogsRouter.put('/:blogId', input_validation_middleware_1.authorization,
     //RETURN
     res.status(204).send(blog);
 }));
-//delete blog by Id
+//(7) delete blog by blogId
 exports.blogsRouter.delete('/:blogId', input_validation_middleware_1.authorization, input_validation_middleware_1.blogsIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const errs = errors.array({ onlyFirstError: true }).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            };
-        });
-        return res.status(400).send({ "errorsMessages": errs });
+        const errs = errors.array({ onlyFirstError: true });
+        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        return res.status(400).json(result);
     }
     //INPUT
     const id = req.params.blogId;

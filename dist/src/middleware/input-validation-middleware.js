@@ -89,16 +89,3 @@ exports.usersLoginOrEmailValidation = (0, express_validator_1.body)('loginOrEmai
 exports.usersIdValidation = (0, express_validator_1.param)('userId')
     .notEmpty()
     .isString();
-//
-// export const collectErrors = (req: Request, res: Response, code: number) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//         const errs = errors.array({onlyFirstError: true}).map(e => {
-//             return {
-//                 message: e.msg,
-//                 field: e.param
-//             }
-//         })
-//         return res.status(code).send({"errorsMessages": errs})
-//     }
-// }
