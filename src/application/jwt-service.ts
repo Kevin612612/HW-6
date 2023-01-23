@@ -1,7 +1,6 @@
 //Presentation Layer
 
 
-
 //(1) create token
 //(2) method returns user by token
 
@@ -12,13 +11,14 @@ export const jwtService = {
 
     //(1) create token
     async createJWT(user: userDataModel) {
-        const payload = {userId: user.id,
-                        login: user.login,
-                        email: user.email}
+        const payload = {
+            userId: user.id,
+            login: user.login,
+            email: user.email
+        }
         const secretOrPrivateKey = process.env.JWT_secret!
         return jwt.sign(payload, secretOrPrivateKey, {expiresIn: '1h'});
     },
-
 
 
     //(2) method return user by token

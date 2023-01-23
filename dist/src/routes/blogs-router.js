@@ -23,6 +23,7 @@ const input_validation_middleware_1 = require("../middleware/input-validation-mi
 const blogs_BLL_1 = require("../BLL/blogs-BLL");
 const posts_BLL_1 = require("../BLL/posts-BLL");
 const express_validator_1 = require("express-validator");
+const authorization_middleware_1 = require("../middleware/authorization-middleware");
 exports.blogsRouter = (0, express_1.Router)({});
 //(1) returns all blogs with paging
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,7 +39,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     res.status(200).send(allBlogs);
 }));
 //(2) create new blog
-exports.blogsRouter.post('/', input_validation_middleware_1.authorization, input_validation_middleware_1.newWebSiteUrlValidation, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/', authorization_middleware_1.authorization, input_validation_middleware_1.newWebSiteUrlValidation, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -74,7 +75,7 @@ exports.blogsRouter.get('/:blogId/posts', input_validation_middleware_1.blogsIdV
     res.status(200).send(posts);
 }));
 //(4) create new post for specific blog
-exports.blogsRouter.post('/:blogId/posts', input_validation_middleware_1.authorization, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/:blogId/posts', authorization_middleware_1.authorization, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -107,7 +108,7 @@ exports.blogsRouter.get('/:blogId', input_validation_middleware_1.blogsIdValidat
     res.status(200).send(blog);
 }));
 //(6) update existing blog by blogId with InputModel
-exports.blogsRouter.put('/:blogId', input_validation_middleware_1.authorization, input_validation_middleware_1.blogsIdValidation, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, input_validation_middleware_1.newWebSiteUrlValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.put('/:blogId', authorization_middleware_1.authorization, input_validation_middleware_1.blogsIdValidation, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, input_validation_middleware_1.newWebSiteUrlValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -124,7 +125,7 @@ exports.blogsRouter.put('/:blogId', input_validation_middleware_1.authorization,
     res.status(204).send(blog);
 }));
 //(7) delete blog by blogId
-exports.blogsRouter.delete('/:blogId', input_validation_middleware_1.authorization, input_validation_middleware_1.blogsIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.delete('/:blogId', authorization_middleware_1.authorization, input_validation_middleware_1.blogsIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

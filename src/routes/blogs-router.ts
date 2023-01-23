@@ -10,7 +10,7 @@
 //(7)delete  delete  blog by blogId
 
 import {Request, Response, Router} from "express";
-import {authorization,
+import {
     descriptionValidation,
     blogsIdValidation,
     nameValidation,
@@ -21,6 +21,7 @@ import {authorization,
 import {blogBusinessLayer} from "../BLL/blogs-BLL";
 import {postBusinessLayer} from "../BLL/posts-BLL";
 import {validationResult} from "express-validator";
+import {authorization} from "../middleware/authorization-middleware";
 
 export const blogsRouter = Router({})
 

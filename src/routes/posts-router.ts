@@ -12,7 +12,6 @@
 
 import {Request, Response, Router} from "express";
 import {
-    authorization,
     blogIdValidationInPost,
     contentValidation,
     postsIdValidation,
@@ -21,7 +20,8 @@ import {
 } from "../middleware/input-validation-middleware";
 import {body, param, validationResult} from "express-validator";
 import {postBusinessLayer} from "../BLL/posts-BLL";
-import {commentsBusinessLayer} from "../BLL/comments-BLL";
+import {authorization} from "../middleware/authorization-middleware";
+
 
 export const postsRouter = Router({})
 

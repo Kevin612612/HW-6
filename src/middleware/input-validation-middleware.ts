@@ -1,17 +1,9 @@
 //Middleware
 
 
-import {Request, Response, NextFunction} from 'express'
+
 import {body, param} from 'express-validator'
 
-//Authorization
-export const authorization = (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers.authorization == 'Basic YWRtaW46cXdlcnR5') {
-        next()
-    } else {
-        res.status(401).send("Unauthorized")
-    }
-}
 
 //blogs validation
 export const blogsIdValidation = param('blogId')

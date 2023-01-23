@@ -1,18 +1,8 @@
 "use strict";
 //Middleware
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersIdValidation = exports.usersLoginOrEmailValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.blogIdValidationInPost = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postsIdValidation = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogsIdValidation = exports.authorization = void 0;
+exports.usersIdValidation = exports.usersLoginOrEmailValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.blogIdValidationInPost = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postsIdValidation = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogsIdValidation = void 0;
 const express_validator_1 = require("express-validator");
-//Authorization
-const authorization = (req, res, next) => {
-    if (req.headers.authorization == 'Basic YWRtaW46cXdlcnR5') {
-        next();
-    }
-    else {
-        res.status(401).send("Unauthorized");
-    }
-};
-exports.authorization = authorization;
 //blogs validation
 exports.blogsIdValidation = (0, express_validator_1.param)('blogId')
     .notEmpty()

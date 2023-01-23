@@ -18,9 +18,10 @@ const express_1 = require("express");
 const users_BLL_1 = require("../BLL/users-BLL");
 const input_validation_middleware_1 = require("../middleware/input-validation-middleware");
 const express_validator_1 = require("express-validator");
+const authorization_middleware_1 = require("../middleware/authorization-middleware");
 exports.usersRouter = (0, express_1.Router)({});
 //(1) return all users
-exports.usersRouter.get('/', input_validation_middleware_1.authorization, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.usersRouter.get('/', authorization_middleware_1.authorization, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     let { pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm, searchEmailTerm } = req.query;
     const a = pageNumber ? pageNumber : '1';
@@ -35,7 +36,7 @@ exports.usersRouter.get('/', input_validation_middleware_1.authorization, (req, 
     res.status(200).send(allUsers);
 }));
 //(2) create new user
-exports.usersRouter.post('/', input_validation_middleware_1.authorization, input_validation_middleware_1.usersLoginValidation, input_validation_middleware_1.usersPasswordValidation, input_validation_middleware_1.usersEmailValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.usersRouter.post('/', authorization_middleware_1.authorization, input_validation_middleware_1.usersLoginValidation, input_validation_middleware_1.usersPasswordValidation, input_validation_middleware_1.usersEmailValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -51,7 +52,7 @@ exports.usersRouter.post('/', input_validation_middleware_1.authorization, input
     res.status(201).send(user);
 }));
 //(3) delete user bu ID
-exports.usersRouter.delete('/:userId', input_validation_middleware_1.authorization, input_validation_middleware_1.usersIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.usersRouter.delete('/:userId', authorization_middleware_1.authorization, input_validation_middleware_1.usersIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

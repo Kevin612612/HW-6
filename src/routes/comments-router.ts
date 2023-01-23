@@ -7,9 +7,9 @@
 
 
 import {Request, Response, Router} from "express";
-import {authorization} from "../middleware/input-validation-middleware";
 import {validationResult} from "express-validator";
 import {commentsBusinessLayer} from "../BLL/comments-BLL";
+import {authorization} from "../middleware/authorization-middleware";
 
 export const commentsRouter = Router({})
 

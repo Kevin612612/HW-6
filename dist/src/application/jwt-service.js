@@ -21,9 +21,11 @@ exports.jwtService = {
     //(1) create token
     createJWT(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = { userId: user.id,
+            const payload = {
+                userId: user.id,
                 login: user.login,
-                email: user.email };
+                email: user.email
+            };
             const secretOrPrivateKey = process.env.JWT_secret;
             return jsonwebtoken_1.default.sign(payload, secretOrPrivateKey, { expiresIn: '1h' });
         });

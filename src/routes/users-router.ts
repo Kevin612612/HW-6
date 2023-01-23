@@ -9,11 +9,12 @@
 
 import {Request, Response, Router} from "express";
 import {userBusinessLayer} from "../BLL/users-BLL";
-import {authorization,
+import {
     usersEmailValidation, usersIdValidation,
     usersLoginValidation,
     usersPasswordValidation} from "../middleware/input-validation-middleware";
 import {validationResult} from "express-validator";
+import {authorization} from "../middleware/authorization-middleware";
 
 
 export const usersRouter = Router({})

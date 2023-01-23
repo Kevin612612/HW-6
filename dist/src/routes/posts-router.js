@@ -22,6 +22,7 @@ const express_1 = require("express");
 const input_validation_middleware_1 = require("../middleware/input-validation-middleware");
 const express_validator_1 = require("express-validator");
 const posts_BLL_1 = require("../BLL/posts-BLL");
+const authorization_middleware_1 = require("../middleware/authorization-middleware");
 exports.postsRouter = (0, express_1.Router)({});
 //(1) returns comments for specified post
 exports.postsRouter.get('/:postId/comments', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,7 +38,7 @@ exports.postsRouter.get('/:postId/comments', (req, res) => __awaiter(void 0, voi
     res.status(200).send(allComments);
 }));
 //(2) create new comment
-exports.postsRouter.post('/:postId/comments', input_validation_middleware_1.authorization, (0, express_validator_1.param)('postId').isString, (0, express_validator_1.body)('content').isLength({ min: 20, max: 300 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/:postId/comments', authorization_middleware_1.authorization, (0, express_validator_1.param)('postId').isString, (0, express_validator_1.body)('content').isLength({ min: 20, max: 300 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -70,7 +71,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     res.status(200).send(allPosts);
 }));
 //(4) create new post
-exports.postsRouter.post('/', input_validation_middleware_1.authorization, input_validation_middleware_1.titleValidation, input_validation_middleware_1.blogIdValidationInPost, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/', authorization_middleware_1.authorization, input_validation_middleware_1.titleValidation, input_validation_middleware_1.blogIdValidationInPost, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -110,7 +111,7 @@ exports.postsRouter.get('/:postId', input_validation_middleware_1.postsIdValidat
     res.status(200).send(post);
 }));
 //(6) update post by postId
-exports.postsRouter.put('/:postId', input_validation_middleware_1.authorization, input_validation_middleware_1.postsIdValidation, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, input_validation_middleware_1.blogIdValidationInPost, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.put('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.postsIdValidation, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, input_validation_middleware_1.blogIdValidationInPost, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -131,7 +132,7 @@ exports.postsRouter.put('/:postId', input_validation_middleware_1.authorization,
     res.status(204).send(post);
 }));
 //(7) delete post by postId
-exports.postsRouter.delete('/:postId', input_validation_middleware_1.authorization, input_validation_middleware_1.postsIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.delete('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.postsIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
