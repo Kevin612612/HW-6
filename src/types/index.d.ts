@@ -1,9 +1,12 @@
-import {userDataModel} from "../repositories/mongodb";
+import {blogViewModel, userDataModel} from "../repositories/mongodb";
 
+//expanding type Request
 declare global {
     declare namespace Express {
         export interface Request {
-            context: [{ user: userDataModel | undefined }, { somethingElse: string }, { oneMore: string }]
+            user: userDataModel | undefined,
+            blog: blogViewModel | undefined,
+            post: any
         }
     }
 }

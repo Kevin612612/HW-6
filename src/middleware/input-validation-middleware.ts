@@ -3,12 +3,30 @@
 
 
 import {body, param} from 'express-validator'
+import {NextFunction, Request, Response} from "express";
+import {blogsRepository} from "../repositories/blogs-repository-db";
 
 
 //blogs validation
-export const blogsIdValidation = param('blogId')
-    .notEmpty()
-    .isString()
+export const blogsIdValidationInParams = async (req: Request, res: Response, next: NextFunction) => {
+    const blog = await blogsRepository.findBlogById(req.params.blogId)
+    if (blog) {
+        req.blog = await blogsRepository.findBlogById(req.params.blogId)
+        next()
+    } else {
+        return res.status(404).send('specified blog is not exists')
+    }
+}
+
+export const blogsIdValidationInBody = async (req: Request, res: Response, next: NextFunction) => {
+    const blog = await blogsRepository.findBlogById(req.body.blogId)
+    if (blog) {
+        req.blog = await blogsRepository.findBlogById(req.body.blogId)
+        next()
+    } else {
+        return res.status(404).send('specified blog is not exists')
+    }
+}
 
 export const nameValidation = body('name')
     .trim()

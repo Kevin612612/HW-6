@@ -32,7 +32,7 @@ const authMiddleWare = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const token = req.headers.authorization.split(' ')[1]; //token is in headers: 'bearer algorithmSecretKey.payload.kindOfHash'
     const userDecoded = yield jwt_service_1.jwtService.getUserByToken(token); //get user from payload
     if (userDecoded) {
-        req.context[0].user = yield users_repository_db_1.usersRepository.findUserByLoginOrEmail(userDecoded.login); //get user from db by user.login and take it into body
+        req.user = yield users_repository_db_1.usersRepository.findUserByLoginOrEmail(userDecoded.login); //get user from db by user.login and take it into body
         next();
     }
     return 401; //we don't get user from headers.authorization

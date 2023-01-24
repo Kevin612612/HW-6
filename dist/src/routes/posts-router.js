@@ -71,7 +71,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     res.status(200).send(allPosts);
 }));
 //(4) create new post
-exports.postsRouter.post('/', authorization_middleware_1.authorization, input_validation_middleware_1.titleValidation, input_validation_middleware_1.blogIdValidationInPost, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/', authorization_middleware_1.authorization, input_validation_middleware_1.blogsIdValidationInBody, input_validation_middleware_1.titleValidation, input_validation_middleware_1.blogIdValidationInPost, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -84,9 +84,11 @@ exports.postsRouter.post('/', authorization_middleware_1.authorization, input_va
         return res.status(400).json(result);
     }
     //INPUT
-    let { title, shortDescription, content, blogId } = req.body;
+    let { title, shortDescription, content } = req.body;
+    const blogId = req.blog.id;
+    const blogName = req.blog.name;
     //BLL
-    const newPost = yield posts_BLL_1.postBusinessLayer.newPostedPost(blogId, title, shortDescription, content);
+    const newPost = yield posts_BLL_1.postBusinessLayer.newPostedPost(blogId, blogName, title, shortDescription, content);
     //RETURN
     res.status(201).send(newPost);
 }));

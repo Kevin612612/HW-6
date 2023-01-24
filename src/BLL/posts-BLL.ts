@@ -49,13 +49,13 @@ export const postBusinessLayer = {
     },
 
 
+
     //(2) creates new comment by postId
     async newPostedCommentByPostId(postId: any, content: any): Promise<commentViewModel | number> {
         const foundPost = await postsRepository.findPostById(postId)
 
         const userId = ''
         const userLogin = ''
-
 
         countOfComments++
         // const idName: string = id ? id : countOfComments.toString()
@@ -67,7 +67,6 @@ export const postBusinessLayer = {
             userLogin: userLogin,
             createdAt: new Date()
         }
-
 
         const inserted = await commentsRepository.newPostedComment(newComment)
 
@@ -83,6 +82,7 @@ export const postBusinessLayer = {
             return 404
         }
     },
+
 
 
     //(3) this method return all posts
@@ -105,41 +105,35 @@ export const postBusinessLayer = {
     },
 
 
+
     //(4) method creates post with specific blogId
     async newPostedPost(blogId: string,
-                        title: any,
-                        shortDescription: any,
+                        blogName: string,
+                        title: string,
+                        shortDescription: string,
                         content: any): Promise<postViewModel | number> {
         countOfPosts++
 
-        const foundBlog = await blogsRepository.findBlogById(blogId)
-
-        let newPost: postViewModel
-
-        if (foundBlog) {
-            newPost = {
-                blogId: blogId,
-                blogName: foundBlog.name,
-                content: content,
-                createdAt: new Date(),
-                id: countOfPosts.toString(),
-                shortDescription: shortDescription,
-                title: title,
-            }
-            const inserted = await postsRepository.newPostedPost(newPost)
-
-            return {
-                blogId: newPost.blogId,
-                blogName: newPost.blogName,
-                content: newPost.content,
-                createdAt: newPost.createdAt,
-                id: newPost.id,
-                shortDescription: newPost.shortDescription,
-                title: newPost.title,
-            };
-        } else {
-            return 404
+        const newPost: postViewModel = {
+            id: countOfPosts.toString(),
+            title: title,
+            shortDescription: shortDescription,
+            blogId: blogId,
+            blogName: blogName,
+            content: content,
+            createdAt: new Date(),
         }
+        await postsRepository.newPostedPost(newPost)
+
+        return {
+            id: newPost.id,
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            blogId: newPost.blogId,
+            blogName: newPost.blogName,
+            content: newPost.content,
+            createdAt: newPost.createdAt,
+        };
     },
 
 

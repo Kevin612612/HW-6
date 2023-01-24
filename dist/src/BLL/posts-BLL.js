@@ -19,7 +19,6 @@ exports.postBusinessLayer = void 0;
 //(6) updatePostById
 //(7) deletePost
 const mongodb_1 = require("../repositories/mongodb");
-const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
 const comments_repository_db_1 = require("../repositories/comments-repository-db");
 let countOfPosts = 0;
@@ -90,35 +89,28 @@ exports.postBusinessLayer = {
         });
     },
     //(4) method creates post with specific blogId
-    newPostedPost(blogId, title, shortDescription, content) {
+    newPostedPost(blogId, blogName, title, shortDescription, content) {
         return __awaiter(this, void 0, void 0, function* () {
             countOfPosts++;
-            const foundBlog = yield blogs_repository_db_1.blogsRepository.findBlogById(blogId);
-            let newPost;
-            if (foundBlog) {
-                newPost = {
-                    blogId: blogId,
-                    blogName: foundBlog.name,
-                    content: content,
-                    createdAt: new Date(),
-                    id: countOfPosts.toString(),
-                    shortDescription: shortDescription,
-                    title: title,
-                };
-                const inserted = yield posts_repository_db_1.postsRepository.newPostedPost(newPost);
-                return {
-                    blogId: newPost.blogId,
-                    blogName: newPost.blogName,
-                    content: newPost.content,
-                    createdAt: newPost.createdAt,
-                    id: newPost.id,
-                    shortDescription: newPost.shortDescription,
-                    title: newPost.title,
-                };
-            }
-            else {
-                return 404;
-            }
+            const newPost = {
+                id: countOfPosts.toString(),
+                title: title,
+                shortDescription: shortDescription,
+                blogId: blogId,
+                blogName: blogName,
+                content: content,
+                createdAt: new Date(),
+            };
+            yield posts_repository_db_1.postsRepository.newPostedPost(newPost);
+            return {
+                id: newPost.id,
+                title: newPost.title,
+                shortDescription: newPost.shortDescription,
+                blogId: newPost.blogId,
+                blogName: newPost.blogName,
+                content: newPost.content,
+                createdAt: newPost.createdAt,
+            };
         });
     },
     //(5) method take post by postId

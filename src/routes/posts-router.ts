@@ -12,7 +12,7 @@
 
 import {Request, Response, Router} from "express";
 import {
-    blogIdValidationInPost,
+    blogIdValidationInPost, blogsIdValidationInBody,
     contentValidation,
     postsIdValidation,
     shortDescriptionValidation,
@@ -85,6 +85,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 //(4) create new post
 postsRouter.post('/',
     authorization,
+    blogsIdValidationInBody,
     titleValidation,
     blogIdValidationInPost,
     shortDescriptionValidation,
@@ -102,9 +103,11 @@ postsRouter.post('/',
             return res.status(400).json(result)
         }
         //INPUT
-        let {title, shortDescription, content, blogId} = req.body
+        let {title, shortDescription, content} = req.body
+        const blogId = req.blog!.id
+        const blogName = req.blog!.name
         //BLL
-        const newPost = await postBusinessLayer.newPostedPost(blogId, title, shortDescription, content)
+        const newPost = await postBusinessLayer.newPostedPost(blogId, blogName, title, shortDescription, content)
         //RETURN
         res.status(201).send(newPost)
     })

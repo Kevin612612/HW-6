@@ -16,7 +16,7 @@ export const blogsRepository = {
 
     //(1) method returns structured Array
     async allBlogs(searchNameTerm: string, sortBy: string, sortDirection: string): Promise<blogViewModel[]> {
-        const order = sortDirection == 'asc' ? 1 : -1; // порядок сортировки
+        const order = (sortDirection == 'asc') ? 1 : -1; // порядок сортировки
         return await blogsCollection
             .find({name : {$regex : searchNameTerm, $options:'i'}}, {projection: {_id: 0}})
             .sort(sortBy, order)
@@ -33,17 +33,17 @@ export const blogsRepository = {
 
 
 
-    //(3) method returns blog by ID
-    async findBlogById(id: string): Promise<blogViewModel | undefined> {
-        const result = await blogsCollection.findOne({id: id}, {projection: {_id: 0}})
+    //(3) method returns blog by blogId
+    async findBlogById(blogId: string): Promise<blogViewModel | undefined> {
+        const result = await blogsCollection.findOne({id: blogId}, {projection: {_id: 0}})
         return result ? result : undefined
     },
 
 
 
-    //(4) method updates blog by ID
-    async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean | number> {
-        const result = await blogsCollection.updateOne({id: id}, {
+    //(4) method updates blog by blogId
+    async updateBlogById(blogId: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
+        const result = await blogsCollection.updateOne({id: blogId}, {
             $set: {
                 name: name,
                 description: description,
@@ -53,7 +53,7 @@ export const blogsRepository = {
         return result.matchedCount === 1
     },
 
-    //(5) method deletes by ID
+    //(5) method deletes blog by blogId
     async deleteBlog(id: string): Promise<boolean | number> {
         const result = await blogsCollection.deleteOne({id: id})
         return result.deletedCount === 1

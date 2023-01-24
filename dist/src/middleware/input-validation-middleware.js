@@ -1,12 +1,41 @@
 "use strict";
 //Middleware
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersIdValidation = exports.usersLoginOrEmailValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.blogIdValidationInPost = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postsIdValidation = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogsIdValidation = void 0;
+exports.usersIdValidation = exports.usersLoginOrEmailValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.blogIdValidationInPost = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postsIdValidation = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogsIdValidationInBody = exports.blogsIdValidationInParams = void 0;
 const express_validator_1 = require("express-validator");
+const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 //blogs validation
-exports.blogsIdValidation = (0, express_validator_1.param)('blogId')
-    .notEmpty()
-    .isString();
+const blogsIdValidationInParams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const blog = yield blogs_repository_db_1.blogsRepository.findBlogById(req.params.blogId);
+    if (blog) {
+        req.blog = yield blogs_repository_db_1.blogsRepository.findBlogById(req.params.blogId);
+        next();
+    }
+    else {
+        return res.status(404).send('specified blog is not exists');
+    }
+});
+exports.blogsIdValidationInParams = blogsIdValidationInParams;
+const blogsIdValidationInBody = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const blog = yield blogs_repository_db_1.blogsRepository.findBlogById(req.body.blogId);
+    if (blog) {
+        req.blog = yield blogs_repository_db_1.blogsRepository.findBlogById(req.body.blogId);
+        next();
+    }
+    else {
+        return res.status(404).send('specified blog is not exists');
+    }
+});
+exports.blogsIdValidationInBody = blogsIdValidationInBody;
 exports.nameValidation = (0, express_validator_1.body)('name')
     .trim()
     .notEmpty()

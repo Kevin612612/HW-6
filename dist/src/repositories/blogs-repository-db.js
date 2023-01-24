@@ -21,7 +21,7 @@ exports.blogsRepository = {
     //(1) method returns structured Array
     allBlogs(searchNameTerm, sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = sortDirection == 'asc' ? 1 : -1; // порядок сортировки
+            const order = (sortDirection == 'asc') ? 1 : -1; // порядок сортировки
             return yield mongodb_1.blogsCollection
                 .find({ name: { $regex: searchNameTerm, $options: 'i' } }, { projection: { _id: 0 } })
                 .sort(sortBy, order)
@@ -35,17 +35,17 @@ exports.blogsRepository = {
             return result.acknowledged;
         });
     },
-    //(3) method returns blog by ID
-    findBlogById(id) {
+    //(3) method returns blog by blogId
+    findBlogById(blogId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield mongodb_1.blogsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+            const result = yield mongodb_1.blogsCollection.findOne({ id: blogId }, { projection: { _id: 0 } });
             return result ? result : undefined;
         });
     },
-    //(4) method updates blog by ID
-    updateBlogById(id, name, description, websiteUrl) {
+    //(4) method updates blog by blogId
+    updateBlogById(blogId, name, description, websiteUrl) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield mongodb_1.blogsCollection.updateOne({ id: id }, {
+            const result = yield mongodb_1.blogsCollection.updateOne({ id: blogId }, {
                 $set: {
                     name: name,
                     description: description,
@@ -55,7 +55,7 @@ exports.blogsRepository = {
             return result.matchedCount === 1;
         });
     },
-    //(5) method deletes by ID
+    //(5) method deletes blog by blogId
     deleteBlog(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.blogsCollection.deleteOne({ id: id });
