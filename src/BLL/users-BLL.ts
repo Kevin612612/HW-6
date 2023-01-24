@@ -74,7 +74,7 @@ export const userBusinessLayer = {
             createdAt: new Date()
         }
 
-        await usersRepository.newPostedUser(newUser)
+        const result = await usersRepository.newPostedUser(newUser)
 
         return {
             id: newUser.id,
@@ -87,6 +87,7 @@ export const userBusinessLayer = {
 
     //(3) method deletes by ID
     async deleteUser(userId: string): Promise<boolean | undefined> {
-        return await usersRepository.deleteUser(userId)
+        const result =  await usersRepository.deleteUser(userId)
+        return result
     },
 }

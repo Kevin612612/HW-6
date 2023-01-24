@@ -8,7 +8,7 @@
 //(5) updatePostById
 //(6) deletePost
 
-import {blogsCollection, postsCollection, postViewModel} from "./mongodb";
+import {postsCollection, postViewModel} from "./mongodb";
 
 
 export const postsRepository = {

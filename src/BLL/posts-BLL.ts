@@ -58,7 +58,7 @@ export const postBusinessLayer = {
             postId: postId,
         }
 
-        await commentsRepository.newPostedComment(newComment)
+        const result = await commentsRepository.newPostedComment(newComment)
 
         return {
             id: newComment.id,
@@ -106,7 +106,7 @@ export const postBusinessLayer = {
             content: content,
             createdAt: new Date(),
         }
-        await postsRepository.newPostedPost(newPost)
+        const result = await postsRepository.newPostedPost(newPost)
 
         return {
             id: newPost.id,
@@ -122,7 +122,8 @@ export const postBusinessLayer = {
 
     //(5) method take post by postId
     async findPostById(postId: string): Promise<postViewModel | undefined> {
-        return await postsRepository.findPostById(postId)
+        const result = await postsRepository.findPostById(postId)
+        return result
     },
 
 
@@ -135,6 +136,7 @@ export const postBusinessLayer = {
 
     //(7) method deletes by postId
     async deletePost(postId: string): Promise<boolean | undefined> {
-        return await postsRepository.deletePost(postId)
+        const result = await postsRepository.deletePost(postId)
+        return result
     },
 }

@@ -51,7 +51,7 @@ exports.postBusinessLayer = {
                 createdAt: new Date(),
                 postId: postId,
             };
-            yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
+            const result = yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
             return {
                 id: newComment.id,
                 content: newComment.content,
@@ -88,7 +88,7 @@ exports.postBusinessLayer = {
                 content: content,
                 createdAt: new Date(),
             };
-            yield posts_repository_db_1.postsRepository.newPostedPost(newPost);
+            const result = yield posts_repository_db_1.postsRepository.newPostedPost(newPost);
             return {
                 id: newPost.id,
                 title: newPost.title,
@@ -103,7 +103,8 @@ exports.postBusinessLayer = {
     //(5) method take post by postId
     findPostById(postId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield posts_repository_db_1.postsRepository.findPostById(postId);
+            const result = yield posts_repository_db_1.postsRepository.findPostById(postId);
+            return result;
         });
     },
     //(6) method updates post by postId
@@ -116,7 +117,8 @@ exports.postBusinessLayer = {
     //(7) method deletes by postId
     deletePost(postId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield posts_repository_db_1.postsRepository.deletePost(postId);
+            const result = yield posts_repository_db_1.postsRepository.deletePost(postId);
+            return result;
         });
     },
 };

@@ -49,7 +49,7 @@ exports.blogBusinessLayer = {
                 websiteUrl: websiteUrl,
                 createdAt: new Date(),
             };
-            yield blogs_repository_db_1.blogsRepository.newPostedBlog(newBlog);
+            const result = yield blogs_repository_db_1.blogsRepository.newPostedBlog(newBlog);
             return {
                 id: newBlog.id,
                 name: newBlog.name,

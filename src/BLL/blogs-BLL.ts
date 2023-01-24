@@ -58,7 +58,7 @@ export const blogBusinessLayer = {
             createdAt: new Date(),
         }
 
-        await blogsRepository.newPostedBlog(newBlog)
+        const result = await blogsRepository.newPostedBlog(newBlog)
 
         return {
             id: newBlog.id,
