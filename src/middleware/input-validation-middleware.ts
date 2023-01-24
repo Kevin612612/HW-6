@@ -5,6 +5,7 @@
 import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from "express";
 import {blogsRepository} from "../repositories/blogs-repository-db";
+import {postsRepository} from "../repositories/posts-repository-db";
 
 
 //blogs validation
@@ -49,9 +50,15 @@ export const newWebSiteUrlValidation = body('websiteUrl')
 
 
 //posts validation
-export const postsIdValidation = param('postId')
-    .notEmpty()
-    .isString()
+export const postsIdValidationInParams = async (req: Request, res: Response, next: NextFunction) => {
+    const post = await postsRepository.findPostById(req.params.postId)
+    if (post) {
+        req.post = await postsRepository.findPostById(req.params.postId)
+        next()
+    } else {
+        return res.status(404).send('specified post is not exists')
+    }
+}
 
 export const titleValidation = body('title')
     .trim()

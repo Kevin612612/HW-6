@@ -26,37 +26,26 @@ let countOfComments = 0
 export const postBusinessLayer = {
 
     //(1) this method return all comments by postId
-    async allCommentsByPostId(postId: any,
-                              pageNumber: any,
-                              pageSize: any,
+    async allCommentsByPostId(postId: string,
+                              pageNumber: number,
+                              pageSize: number,
                               sortBy: any,
                               sortDirection: any): Promise<CommentsTypeSchema | number> {
-        const post = await postsRepository.findPostById(postId)
-        if (post != 404) {
-            const sortedItems = await commentsRepository.allComments(postId, sortBy, sortDirection);
-            const quantityOfDocs = await commentsCollection.countDocuments({postId: postId})
+        const sortedItems = await commentsRepository.allComments(postId, sortBy, sortDirection);
+        const quantityOfDocs = await commentsCollection.countDocuments({postId: postId})
 
-            return {
-                pagesCount: Math.ceil(quantityOfDocs / +pageSize),
-                page: +pageNumber,
-                pageSize: +pageSize,
-                totalCount: quantityOfDocs,
-                items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
-            }
-        } else {
-            return 404
+        return {
+            pagesCount: Math.ceil(quantityOfDocs / pageSize),
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: quantityOfDocs,
+            items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
         }
     },
 
 
-
     //(2) creates new comment by postId
-    async newPostedCommentByPostId(postId: any, content: any): Promise<commentViewModel | number> {
-        const foundPost = await postsRepository.findPostById(postId)
-
-        const userId = ''
-        const userLogin = ''
-
+    async newPostedCommentByPostId(postId: string, content: string, userId: string, userLogin: string): Promise<commentViewModel | number> {
         countOfComments++
         // const idName: string = id ? id : countOfComments.toString()
 
@@ -65,45 +54,39 @@ export const postBusinessLayer = {
             content: content,
             userId: userId,
             userLogin: userLogin,
-            createdAt: new Date()
+            createdAt: new Date(),
+            postId: postId,
         }
 
-        const inserted = await commentsRepository.newPostedComment(newComment)
+        await commentsRepository.newPostedComment(newComment)
 
-        if (inserted) {
-            return {
-                id: newComment.id,
-                content: newComment.content,
-                userId: newComment.userId,
-                userLogin: newComment.userLogin,
-                createdAt: newComment.createdAt
-            };
-        } else {
-            return 404
-        }
+        return {
+            id: newComment.id,
+            content: newComment.content,
+            userId: newComment.userId,
+            userLogin: newComment.userLogin,
+            createdAt: newComment.createdAt
+        };
     },
 
 
-
     //(3) this method return all posts
-    async allPosts(pageNumber: any,
-                   pageSize: any,
+    async allPosts(pageNumber: number,
+                   pageSize: number,
                    sortBy: any,
                    sortDirection: any): Promise<PostsTypeSchema | number> {
-
 
         const sortedItems = await postsRepository.allPostByBlogId(sortBy, sortDirection);
         const quantityOfDocs = await postsCollection.countDocuments({})
 
         return {
-            pagesCount: Math.ceil(quantityOfDocs / +pageSize),
-            page: +pageNumber,
-            pageSize: +pageSize,
+            pagesCount: Math.ceil(quantityOfDocs / pageSize),
+            page: pageNumber,
+            pageSize: pageSize,
             totalCount: quantityOfDocs,
-            items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
+            items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * pageSize)
         }
     },
-
 
 
     //(4) method creates post with specific blogId
@@ -138,20 +121,20 @@ export const postBusinessLayer = {
 
 
     //(5) method take post by postId
-    async findPostById(postId: string): Promise<postViewModel | number> {
+    async findPostById(postId: string): Promise<postViewModel | undefined> {
         return await postsRepository.findPostById(postId)
     },
 
 
-    //(6) method updates post by ID
-    async updatePostById(postId: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean | number> {
-        const result = await postsRepository.updatePostById(postId, title, shortDescription, content, blogId)
+    //(6) method updates post by postId
+    async updatePostById(postId: string, blogId: string, blogName: string, title: string, shortDescription: string, content: string): Promise<boolean | number> {
+        const result = await postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content)
         return result ? result : 404
     },
 
 
-    //(7) method deletes by ID
-    async deletePost(id: string): Promise<boolean | number> {
-        return await postsRepository.deletePost(id)
+    //(7) method deletes by postId
+    async deletePost(postId: string): Promise<boolean | undefined> {
+        return await postsRepository.deletePost(postId)
     },
 }

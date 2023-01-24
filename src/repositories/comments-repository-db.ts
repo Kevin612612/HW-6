@@ -7,7 +7,7 @@
 //(4) deleteComment
 //(5) findCommentById
 
-import {blogsCollection, blogViewModel, commentsCollection, commentViewModel, postsCollection} from "./mongodb";
+import {commentsCollection, commentViewModel} from "./mongodb";
 
 export const commentsRepository = {
 
@@ -15,7 +15,7 @@ export const commentsRepository = {
     async allComments(postId: string, sortBy: any, sortDirection: any): Promise<commentViewModel[]> {
         const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
         return await commentsCollection
-            .find({})
+            .find({postId: postId})
             .sort(sortBy, order)
             .toArray();
     },

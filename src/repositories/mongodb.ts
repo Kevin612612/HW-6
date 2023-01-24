@@ -41,6 +41,9 @@ export type UsersTypeSchema = {pagesCount: number, page: number, pageSize: numbe
 //view type
 export type commentViewModel = {id: string, content: string, userId: string, userLogin: string, createdAt: Date}
 
+//data type
+export type commentDataModel = {id: string, content: string, userId: string, userLogin: string, createdAt: Date, postId: string}
+
 //userType returned by POST-method
 export type CommentsTypeSchema = {pagesCount: number, page: number, pageSize: number, totalCount: number, items: commentViewModel[]}
 

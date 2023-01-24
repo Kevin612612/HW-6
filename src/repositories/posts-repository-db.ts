@@ -1,7 +1,6 @@
 //Data access Layer
 
 
-
 //(1) allPosts
 //(2) allPostByBlogId
 //(3) newPostedPost
@@ -18,8 +17,8 @@ export const postsRepository = {
     async allPosts(blogId: string, sortBy: any, sortDirection: any): Promise<postViewModel[]> {
         const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
         return await postsCollection
-            .find({blogId : blogId}, {projection: {_id: 0}})
-            .sort( sortBy, order)
+            .find({blogId: blogId}, {projection: {_id: 0}})
+            .sort(sortBy, order)
             .toArray();
     },
 
@@ -29,10 +28,9 @@ export const postsRepository = {
         const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
         return await postsCollection
             .find({}, {projection: {_id: 0}})
-            .sort( sortBy, order)
+            .sort(sortBy, order)
             .toArray();
     },
-
 
 
     //(3) method posts new post
@@ -42,45 +40,31 @@ export const postsRepository = {
     },
 
 
-
     //(4) method returns post by ID
-    async findPostById(id: string): Promise<postViewModel | number> {
+    async findPostById(id: string): Promise<postViewModel | undefined> {
         const post = await postsCollection.findOne({id: id}, {projection: {_id: 0}})
-        return post ? post : 404
+        return post ? post : undefined
     },
-
 
 
     //(5) method updates post by ID
-    async updatePostById(postId: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean | number> {
-
-        const blogFoundName = await blogsCollection.findOne({id: blogId})
-        let postFound
-        if (blogFoundName) {
-            postFound = await postsCollection.find({id: postId})
-            if (postFound) {
-                const result = await postsCollection.updateOne({id: postId}, {
-                    $set: {
-                        blogId: blogId,
-                        blogName: blogFoundName.name,
-                        content: content,
-                        id: postId,
-                        shortDescription: shortDescription,
-                        title: title,
-                    }
-                })
-                return result.matchedCount === 1
-            } else {
-                return 404
+    async updatePostById(postId: string, blogId: string, blogName: string, title: string, shortDescription: string, content: string): Promise<boolean | number> {
+        const result = await postsCollection.updateOne({id: postId}, {
+            $set: {
+                blogId: blogId,
+                blogName: blogName,
+                content: content,
+                id: postId,
+                shortDescription: shortDescription,
+                title: title,
             }
-        } else {
-            return 404
-        }
+        })
+        return result.matchedCount === 1
     },
 
     //(6) method deletes by ID
-    async deletePost(postId: string): Promise<boolean | number> {
+    async deletePost(postId: string): Promise<boolean | undefined> {
         const result = await postsCollection.deleteOne({id: postId})
-        return result.deletedCount ? result.deletedCount === 1 : 404
+        return result.deletedCount ? result.deletedCount === 1 : undefined
     }
 }

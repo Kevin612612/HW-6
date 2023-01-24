@@ -27,29 +27,20 @@ exports.postBusinessLayer = {
     //(1) this method return all comments by postId
     allCommentsByPostId(postId, pageNumber, pageSize, sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield posts_repository_db_1.postsRepository.findPostById(postId);
-            if (post != 404) {
-                const sortedItems = yield comments_repository_db_1.commentsRepository.allComments(postId, sortBy, sortDirection);
-                const quantityOfDocs = yield mongodb_1.commentsCollection.countDocuments({ postId: postId });
-                return {
-                    pagesCount: Math.ceil(quantityOfDocs / +pageSize),
-                    page: +pageNumber,
-                    pageSize: +pageSize,
-                    totalCount: quantityOfDocs,
-                    items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
-                };
-            }
-            else {
-                return 404;
-            }
+            const sortedItems = yield comments_repository_db_1.commentsRepository.allComments(postId, sortBy, sortDirection);
+            const quantityOfDocs = yield mongodb_1.commentsCollection.countDocuments({ postId: postId });
+            return {
+                pagesCount: Math.ceil(quantityOfDocs / pageSize),
+                page: pageNumber,
+                pageSize: pageSize,
+                totalCount: quantityOfDocs,
+                items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
+            };
         });
     },
     //(2) creates new comment by postId
-    newPostedCommentByPostId(postId, content) {
+    newPostedCommentByPostId(postId, content, userId, userLogin) {
         return __awaiter(this, void 0, void 0, function* () {
-            const foundPost = yield posts_repository_db_1.postsRepository.findPostById(postId);
-            const userId = '';
-            const userLogin = '';
             countOfComments++;
             // const idName: string = id ? id : countOfComments.toString()
             const newComment = {
@@ -57,21 +48,17 @@ exports.postBusinessLayer = {
                 content: content,
                 userId: userId,
                 userLogin: userLogin,
-                createdAt: new Date()
+                createdAt: new Date(),
+                postId: postId,
             };
-            const inserted = yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
-            if (inserted) {
-                return {
-                    id: newComment.id,
-                    content: newComment.content,
-                    userId: newComment.userId,
-                    userLogin: newComment.userLogin,
-                    createdAt: newComment.createdAt
-                };
-            }
-            else {
-                return 404;
-            }
+            yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
+            return {
+                id: newComment.id,
+                content: newComment.content,
+                userId: newComment.userId,
+                userLogin: newComment.userLogin,
+                createdAt: newComment.createdAt
+            };
         });
     },
     //(3) this method return all posts
@@ -80,11 +67,11 @@ exports.postBusinessLayer = {
             const sortedItems = yield posts_repository_db_1.postsRepository.allPostByBlogId(sortBy, sortDirection);
             const quantityOfDocs = yield mongodb_1.postsCollection.countDocuments({});
             return {
-                pagesCount: Math.ceil(quantityOfDocs / +pageSize),
-                page: +pageNumber,
-                pageSize: +pageSize,
+                pagesCount: Math.ceil(quantityOfDocs / pageSize),
+                page: pageNumber,
+                pageSize: pageSize,
                 totalCount: quantityOfDocs,
-                items: sortedItems.slice((+pageNumber - 1) * (+pageSize), (+pageNumber) * (+pageSize))
+                items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * pageSize)
             };
         });
     },
@@ -119,17 +106,17 @@ exports.postBusinessLayer = {
             return yield posts_repository_db_1.postsRepository.findPostById(postId);
         });
     },
-    //(6) method updates post by ID
-    updatePostById(postId, title, shortDescription, content, blogId) {
+    //(6) method updates post by postId
+    updatePostById(postId, blogId, blogName, title, shortDescription, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield posts_repository_db_1.postsRepository.updatePostById(postId, title, shortDescription, content, blogId);
+            const result = yield posts_repository_db_1.postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content);
             return result ? result : 404;
         });
     },
-    //(7) method deletes by ID
-    deletePost(id) {
+    //(7) method deletes by postId
+    deletePost(postId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield posts_repository_db_1.postsRepository.deletePost(id);
+            return yield posts_repository_db_1.postsRepository.deletePost(postId);
         });
     },
 };

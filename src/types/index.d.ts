@@ -1,4 +1,4 @@
-import {blogViewModel, userDataModel} from "../repositories/mongodb";
+import {blogViewModel, postViewModel, userDataModel} from "../repositories/mongodb";
 
 //expanding type Request
 declare global {
@@ -6,7 +6,7 @@ declare global {
         export interface Request {
             user: userDataModel | undefined,
             blog: blogViewModel | undefined,
-            post: any
+            post: postViewModel | undefined,
         }
     }
 }

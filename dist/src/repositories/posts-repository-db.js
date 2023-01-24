@@ -50,43 +50,30 @@ exports.postsRepository = {
     findPostById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const post = yield mongodb_1.postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
-            return post ? post : 404;
+            return post ? post : undefined;
         });
     },
     //(5) method updates post by ID
-    updatePostById(postId, title, shortDescription, content, blogId) {
+    updatePostById(postId, blogId, blogName, title, shortDescription, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            const blogFoundName = yield mongodb_1.blogsCollection.findOne({ id: blogId });
-            let postFound;
-            if (blogFoundName) {
-                postFound = yield mongodb_1.postsCollection.find({ id: postId });
-                if (postFound) {
-                    const result = yield mongodb_1.postsCollection.updateOne({ id: postId }, {
-                        $set: {
-                            blogId: blogId,
-                            blogName: blogFoundName.name,
-                            content: content,
-                            id: postId,
-                            shortDescription: shortDescription,
-                            title: title,
-                        }
-                    });
-                    return result.matchedCount === 1;
+            const result = yield mongodb_1.postsCollection.updateOne({ id: postId }, {
+                $set: {
+                    blogId: blogId,
+                    blogName: blogName,
+                    content: content,
+                    id: postId,
+                    shortDescription: shortDescription,
+                    title: title,
                 }
-                else {
-                    return 404;
-                }
-            }
-            else {
-                return 404;
-            }
+            });
+            return result.matchedCount === 1;
         });
     },
     //(6) method deletes by ID
     deletePost(postId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.postsCollection.deleteOne({ id: postId });
-            return result.deletedCount ? result.deletedCount === 1 : 404;
+            return result.deletedCount ? result.deletedCount === 1 : undefined;
         });
     }
 };
