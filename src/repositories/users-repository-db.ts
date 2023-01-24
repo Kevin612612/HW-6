@@ -42,7 +42,6 @@ export const usersRepository = {
 
     //(4) method returns user by loginOrEmail
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<userDataModel | undefined> {
-        debugger
         const result = await usersCollection.findOne({$or: [{login: {$regex : loginOrEmail}}, {email: {$regex : loginOrEmail}}]})
         return result ? result : undefined
     },

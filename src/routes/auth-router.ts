@@ -20,7 +20,6 @@ authRouter.post('/login',
     oneOf([usersLoginValidation1, usersEmailValidation1]),
     usersPasswordValidation,
     async (req: Request, res: Response) => {
-    debugger
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

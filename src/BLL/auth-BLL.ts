@@ -13,7 +13,6 @@ export const authBusinessLayer = {
 
     //(1) Does user exist and password correct
     async IsUserExist(loginOrEmail: string, password: string): Promise<undefined | userDataModel> {
-        debugger
         //находим пользователя по логину или email
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         //если такой есть то сравниваем его хэш с хэшом введенного пароля
