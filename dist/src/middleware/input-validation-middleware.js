@@ -10,10 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersIdValidation = exports.usersLoginOrEmailValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.blogIdValidationInPost = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postsIdValidationInParams = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogsIdValidationInBody = exports.blogsIdValidationInParams = void 0;
+exports.usersIdValidationInParams = exports.usersLoginOrEmailValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.blogIdValidationInPost = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postsIdValidationInParams = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogsIdValidationInBody = exports.blogsIdValidationInParams = void 0;
 const express_validator_1 = require("express-validator");
 const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
+const mongodb_1 = require("../repositories/mongodb");
+const users_repository_db_1 = require("../repositories/users-repository-db");
 //blogs validation
 const blogsIdValidationInParams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const blog = yield blogs_repository_db_1.blogsRepository.findBlogById(req.params.blogId);
@@ -114,6 +116,14 @@ exports.usersLoginOrEmailValidation = (0, express_validator_1.body)('loginOrEmai
     .isLength({ min: 3, max: 20 })
     .matches('^[a-zA-Z0-9_-]*$' || '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$');
 //userId validation
-exports.usersIdValidation = (0, express_validator_1.param)('userId')
-    .notEmpty()
-    .isString();
+const usersIdValidationInParams = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield mongodb_1.usersCollection.findOne({ id: req.params.userId });
+    if (user) {
+        req.user = yield users_repository_db_1.usersRepository.findUserByLoginOrEmail(user.login);
+        next();
+    }
+    else {
+        return res.status(404).send('specified user is not exists');
+    }
+});
+exports.usersIdValidationInParams = usersIdValidationInParams;

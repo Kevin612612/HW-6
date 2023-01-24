@@ -24,8 +24,8 @@ exports.usersRouter = (0, express_1.Router)({});
 exports.usersRouter.get('/', authorization_middleware_1.authorization, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     let { pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm, searchEmailTerm } = req.query;
-    const a = pageNumber ? pageNumber : '1';
-    const b = pageSize ? pageSize : "10";
+    const a = pageNumber ? +pageNumber : 1;
+    const b = pageSize ? +pageSize : 10;
     const c = sortBy ? sortBy : "createdAt";
     const d = sortDirection ? sortDirection : "desc";
     const e = searchLoginTerm ? searchLoginTerm : null;
@@ -51,8 +51,8 @@ exports.usersRouter.post('/', authorization_middleware_1.authorization, input_va
     //RETURN
     res.status(201).send(user);
 }));
-//(3) delete user bu ID
-exports.usersRouter.delete('/:userId', authorization_middleware_1.authorization, input_validation_middleware_1.usersIdValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//(3) delete user bu userId
+exports.usersRouter.delete('/:userId', authorization_middleware_1.authorization, input_validation_middleware_1.usersIdValidationInParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -61,9 +61,9 @@ exports.usersRouter.delete('/:userId', authorization_middleware_1.authorization,
         return res.status(400).json(result);
     }
     //INPUT
-    const id = req.params.userId;
+    const userId = req.user.id;
     //BLL
-    const user = yield users_BLL_1.userBusinessLayer.deleteUser(id);
+    const user = yield users_BLL_1.userBusinessLayer.deleteUser(userId);
     //RETURN
     res.status(204).send(user);
 }));

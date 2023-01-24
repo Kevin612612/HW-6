@@ -6,6 +6,8 @@ import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from "express";
 import {blogsRepository} from "../repositories/blogs-repository-db";
 import {postsRepository} from "../repositories/posts-repository-db";
+import {usersCollection} from "../repositories/mongodb";
+import {usersRepository} from "../repositories/users-repository-db";
 
 
 //blogs validation
@@ -122,6 +124,12 @@ export const usersLoginOrEmailValidation = body('loginOrEmail')
     .matches('^[a-zA-Z0-9_-]*$' || '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
 
 //userId validation
-export const usersIdValidation = param('userId')
-    .notEmpty()
-    .isString()
+export const usersIdValidationInParams = async (req: Request, res: Response, next: NextFunction) => {
+    const user = await usersCollection.findOne({id: req.params.userId})
+    if (user) {
+        req.user = await usersRepository.findUserByLoginOrEmail(user.login)
+        next()
+    } else {
+        return res.status(404).send('specified user is not exists')
+    }
+}

@@ -21,6 +21,7 @@ exports.authBusinessLayer = {
     //(1) Does user exist and password correct
     IsUserExist(loginOrEmail, password) {
         return __awaiter(this, void 0, void 0, function* () {
+            debugger;
             //находим пользователя по логину или email
             const user = yield users_repository_db_1.usersRepository.findUserByLoginOrEmail(loginOrEmail);
             //если такой есть то сравниваем его хэш с хэшом введенного пароля
@@ -30,11 +31,11 @@ exports.authBusinessLayer = {
                     return user;
                 }
                 else {
-                    return 401;
+                    return undefined;
                 }
             }
             else {
-                return 401;
+                return undefined;
             }
         });
     }

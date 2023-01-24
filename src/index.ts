@@ -30,7 +30,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 //ROUTES
-app.use('/auth/login', authRouter)
+app.use('/auth', authRouter)
 
 app.use('/users', usersRouter)
 app.use('/blogs', blogsRouter)

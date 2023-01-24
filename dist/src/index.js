@@ -37,7 +37,7 @@ exports.app.get('/', (req, res) => {
 </div>`);
 });
 //ROUTES
-exports.app.use('/auth/login', auth_router_1.authRouter);
+exports.app.use('/auth', auth_router_1.authRouter);
 exports.app.use('/users', users_router_1.usersRouter);
 exports.app.use('/blogs', blogs_router_1.blogsRouter);
 exports.app.use('/posts', posts_router_1.postsRouter);

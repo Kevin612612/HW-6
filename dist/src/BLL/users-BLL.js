@@ -27,7 +27,14 @@ exports.userBusinessLayer = {
         return __awaiter(this, void 0, void 0, function* () {
             let filter = {};
             if (searchLoginTerm && searchEmailTerm) {
-                filter = { $or: [{ login: { $regex: searchLoginTerm, $options: 'i' } }, { email: { $regex: searchEmailTerm, $options: 'i' } }] };
+                filter = {
+                    $or: [{ login: { $regex: searchLoginTerm, $options: 'i' } }, {
+                            email: {
+                                $regex: searchEmailTerm,
+                                $options: 'i'
+                            }
+                        }]
+                };
             }
             if (searchLoginTerm && !searchEmailTerm) {
                 filter = { login: { $regex: searchLoginTerm, $options: 'i' } };
@@ -71,25 +78,19 @@ exports.userBusinessLayer = {
                 passwordHash,
                 createdAt: new Date()
             };
-            const inserted = yield users_repository_db_1.usersRepository.newPostedUser(newUser);
-            if (inserted) {
-                return {
-                    id: newUser.id,
-                    login: newUser.login,
-                    email: newUser.email,
-                    createdAt: newUser.createdAt
-                };
-            }
-            else {
-                return 404;
-            }
+            yield users_repository_db_1.usersRepository.newPostedUser(newUser);
+            return {
+                id: newUser.id,
+                login: newUser.login,
+                email: newUser.email,
+                createdAt: newUser.createdAt
+            };
         });
     },
     //(3) method deletes by ID
-    deleteUser(id) {
+    deleteUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield users_repository_db_1.usersRepository.deleteUser(id);
-            return result ? result : 404;
+            return yield users_repository_db_1.usersRepository.deleteUser(userId);
         });
     },
 };

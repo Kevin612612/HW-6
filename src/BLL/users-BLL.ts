@@ -1,7 +1,6 @@
 //Business Layer
 
 
-
 //(1) allUsers
 //(2) newPostedUser
 //(3) deleteUser
@@ -16,20 +15,24 @@ let countOfUsers = 0
 export const userBusinessLayer = {
 
     //(1) this method returns all users to router
-    async allUsers(pageNumber: any, pageSize: any, sortBy: any, sortDirection: any, searchLoginTerm: any, searchEmailTerm: any): Promise<UsersTypeSchema> {
+    async allUsers(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, searchLoginTerm: any, searchEmailTerm: any): Promise<UsersTypeSchema> {
         let filter = {}
         if (searchLoginTerm && searchEmailTerm) {
-            filter = {$or: [{login: {$regex : searchLoginTerm, $options:'i'}}, {email: {$regex : searchEmailTerm, $options:'i'}}]}
+            filter = {
+                $or: [{login: {$regex: searchLoginTerm, $options: 'i'}}, {
+                    email: {
+                        $regex: searchEmailTerm,
+                        $options: 'i'
+                    }
+                }]
+            }
         }
-
         if (searchLoginTerm && !searchEmailTerm) {
-            filter = {login: {$regex : searchLoginTerm, $options:'i'}}
+            filter = {login: {$regex: searchLoginTerm, $options: 'i'}}
         }
-
         if (!searchLoginTerm && searchEmailTerm) {
-            filter = {email: {$regex : searchEmailTerm, $options:'i'}}
+            filter = {email: {$regex: searchEmailTerm, $options: 'i'}}
         }
-
         if (!searchLoginTerm && !searchEmailTerm) {
             filter = {}
         }
@@ -54,12 +57,11 @@ export const userBusinessLayer = {
     },
 
 
-
     //(2) method creates user
     async newPostedUser(id: string, login: string, password: string, email: string): Promise<userViewModel | number> {
         countOfUsers++
-
         const idName: string = id ? id : countOfUsers.toString()
+
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await bcrypt.hash(password, passwordSalt)
 
@@ -72,25 +74,19 @@ export const userBusinessLayer = {
             createdAt: new Date()
         }
 
-        const inserted = await usersRepository.newPostedUser(newUser)
+        await usersRepository.newPostedUser(newUser)
 
-        if (inserted) {
-            return {
-                id: newUser.id,
-                login: newUser.login,
-                email: newUser.email,
-                createdAt: newUser.createdAt
-            };
-        } else {
-            return 404
-        }
+        return {
+            id: newUser.id,
+            login: newUser.login,
+            email: newUser.email,
+            createdAt: newUser.createdAt
+        };
     },
 
 
-
     //(3) method deletes by ID
-    async deleteUser(id: string): Promise<boolean | number> {
-        const result = await usersRepository.deleteUser(id)
-        return result ? result : 404
+    async deleteUser(userId: string): Promise<boolean | undefined> {
+        return await usersRepository.deleteUser(userId)
     },
 }

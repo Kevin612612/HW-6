@@ -10,9 +10,10 @@
 import {Request, Response, Router} from "express";
 import {userBusinessLayer} from "../BLL/users-BLL";
 import {
-    usersEmailValidation, usersIdValidation,
+    usersEmailValidation, usersIdValidationInParams,
     usersLoginValidation,
-    usersPasswordValidation} from "../middleware/input-validation-middleware";
+    usersPasswordValidation
+} from "../middleware/input-validation-middleware";
 import {validationResult} from "express-validator";
 import {authorization} from "../middleware/authorization-middleware";
 
@@ -25,8 +26,8 @@ usersRouter.get('/',
     async (req: Request, res: Response) => {
         //INPUT
         let {pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm, searchEmailTerm} = req.query
-        const a = pageNumber ? pageNumber : '1'
-        const b = pageSize ? pageSize : "10"
+        const a = pageNumber ? +pageNumber : 1
+        const b = pageSize ? +pageSize : 10
         const c = sortBy ? sortBy : "createdAt"
         const d = sortDirection ? sortDirection : "desc"
         const e = searchLoginTerm ? searchLoginTerm : null
@@ -61,10 +62,10 @@ usersRouter.post('/',
     })
 
 
-//(3) delete user bu ID
+//(3) delete user bu userId
 usersRouter.delete('/:userId',
     authorization,
-    usersIdValidation,
+    usersIdValidationInParams,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);
@@ -74,9 +75,9 @@ usersRouter.delete('/:userId',
             return res.status(400).json(result)
         }
         //INPUT
-        const id = req.params.userId
+        const userId = req.user!.id
         //BLL
-        const user = await userBusinessLayer.deleteUser(id)
+        const user = await userBusinessLayer.deleteUser(userId)
         //RETURN
         res.status(204).send(user)
     })

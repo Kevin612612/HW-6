@@ -12,7 +12,8 @@ import {userDataModel} from "../repositories/mongodb";
 export const authBusinessLayer = {
 
     //(1) Does user exist and password correct
-    async IsUserExist(loginOrEmail: string, password: string): Promise<number | userDataModel> {
+    async IsUserExist(loginOrEmail: string, password: string): Promise<undefined | userDataModel> {
+        debugger
         //находим пользователя по логину или email
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         //если такой есть то сравниваем его хэш с хэшом введенного пароля
@@ -21,10 +22,10 @@ export const authBusinessLayer = {
             if (passwordHash == user.passwordHash) {
                 return user
             } else {
-                return 401
+                return undefined
             }
         } else {
-            return 401
+            return undefined
         }
     }
 }

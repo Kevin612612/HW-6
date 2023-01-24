@@ -20,7 +20,6 @@ export const usersRepository = {
             .find(filter, {projection: {_id: 0}})
             .sort(sortBy, order)
             .toArray();
-
     },
 
 
@@ -34,7 +33,7 @@ export const usersRepository = {
 
 
     //(3) method  delete user by Id
-    async deleteUser(id: string): Promise<boolean | number> {
+    async deleteUser(id: string): Promise<boolean | undefined> {
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
@@ -43,6 +42,7 @@ export const usersRepository = {
 
     //(4) method returns user by loginOrEmail
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<userDataModel | undefined> {
+        debugger
         const result = await usersCollection.findOne({$or: [{login: {$regex : loginOrEmail}}, {email: {$regex : loginOrEmail}}]})
         return result ? result : undefined
     },
