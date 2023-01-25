@@ -91,7 +91,7 @@ exports.userBusinessLayer = {
     deleteUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield users_repository_db_1.usersRepository.deleteUser(userId);
-            return result;
+            return result ? result : 404;
         });
     },
 };

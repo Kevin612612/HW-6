@@ -66,8 +66,6 @@ usersRouter.post('/',
 //(3) delete user bu userId
 usersRouter.delete('/:userId',
     authorization,
-    userIdValidation,
-    usersIdExtractingFromParams,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);
@@ -77,7 +75,7 @@ usersRouter.delete('/:userId',
             return res.status(400).json(result)
         }
         //INPUT
-        const userId = req.user!.id
+        const userId = req.params.userId
         //BLL
         const user = await userBusinessLayer.deleteUser(userId)
         //RETURN

@@ -52,7 +52,7 @@ exports.usersRouter.post('/', authorization_middleware_1.authorization, input_va
     res.status(201).send(user);
 }));
 //(3) delete user bu userId
-exports.usersRouter.delete('/:userId', authorization_middleware_1.authorization, input_validation_middleware_1.userIdValidation, input_validation_middleware_1.usersIdExtractingFromParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.usersRouter.delete('/:userId', authorization_middleware_1.authorization, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -61,7 +61,7 @@ exports.usersRouter.delete('/:userId', authorization_middleware_1.authorization,
         return res.status(400).json(result);
     }
     //INPUT
-    const userId = req.user.id;
+    const userId = req.params.userId;
     //BLL
     const user = yield users_BLL_1.userBusinessLayer.deleteUser(userId);
     //RETURN

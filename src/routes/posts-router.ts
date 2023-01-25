@@ -133,7 +133,6 @@ postsRouter.get('/:postId',
 //(6) update post by postId
 postsRouter.put('/:postId',
     authorization,
-    postIdValidation,
     blogIdValidationInBody,
     titleValidation,
     shortDescriptionValidation,

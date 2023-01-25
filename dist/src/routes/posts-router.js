@@ -102,7 +102,7 @@ exports.postsRouter.get('/:postId', input_validation_middleware_1.postIdValidati
     res.status(200).send(post);
 }));
 //(6) update post by postId
-exports.postsRouter.put('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.postIdValidation, input_validation_middleware_1.blogIdValidationInBody, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.put('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.blogIdValidationInBody, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

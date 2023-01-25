@@ -86,8 +86,8 @@ export const userBusinessLayer = {
 
 
     //(3) method deletes by ID
-    async deleteUser(userId: string): Promise<boolean | undefined> {
+    async deleteUser(userId: string): Promise<boolean | number> {
         const result =  await usersRepository.deleteUser(userId)
-        return result
+        return result ? result : 404
     },
 }
