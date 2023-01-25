@@ -71,3 +71,4 @@ exports.postsRepository = {
         });
     }
 };
+

@@ -1,6 +1,7 @@
 //Data access Layer
 
 
+
 //(1) allPosts
 //(2) allPostByBlogId
 //(3) newPostedPost

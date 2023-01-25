@@ -117,3 +117,4 @@ exports.usersEmailValidation1 = (0, express_validator_1.body)('loginOrEmail')
 //comment validation
 exports.commentValidation = (0, express_validator_1.body)('content')
     .isLength({ min: 20, max: 300 });
+

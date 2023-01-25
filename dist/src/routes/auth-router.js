@@ -42,3 +42,4 @@ exports.authRouter.get('/me', authorization_middleware_1.authMiddleWare, (req, r
         userId: req.user.id
     });
 }));
+
