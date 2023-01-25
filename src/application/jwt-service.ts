@@ -33,7 +33,7 @@ export const jwtService = {
                 email: result.email
             }
         } catch {
-            return null
+            return undefined
         }
     }
 }

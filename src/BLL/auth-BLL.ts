@@ -14,8 +14,7 @@ import {jwtService} from "../application/jwt-service";
 export const authBusinessLayer = {
 
     //(1) Does user exist and password correct
-    async IsUserExist(loginOrEmail: string, password: string): Promise<undefined | userDataModel | string | number> {
-        // debugger
+    async IsUserExist(loginOrEmail: string, password: string): Promise<string | number> {
         //находим пользователя по логину или email
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         //если такой есть то сравниваем его хэш с хэшом введенного пароля

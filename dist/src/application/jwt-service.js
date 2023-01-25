@@ -43,7 +43,7 @@ exports.jwtService = {
                 };
             }
             catch (_a) {
-                return null;
+                return undefined;
             }
         });
     }
