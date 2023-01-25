@@ -38,7 +38,7 @@ exports.postsRouter.get('/:postId/comments', input_validation_middleware_1.postI
     res.status(200).send(allComments);
 }));
 //(2) create new comment
-exports.postsRouter.post('/:postId/comments', authorization_middleware_1.authMiddleWare, input_validation_middleware_1.postIdValidation, input_validation_middleware_1.commentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/:postId/comments', authorization_middleware_1.authMiddleWare, input_validation_middleware_1.commentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

@@ -34,7 +34,7 @@ authRouter.post('/login',
         //BLL
         const userToken = await authBusinessLayer.IsUserExist(loginOrEmail, password)
         //RETURN
-        res.status(201).send(userToken)
+        res.status(200).send(userToken)
     })
 
 

@@ -12,11 +12,9 @@
 
 import {Request, Response, Router} from "express";
 import {
-    blogExtractingFromBody,
     blogIdValidationInBody,
     commentValidation,
     contentValidation,
-    postExtractingFromParams,
     postIdValidation,
     shortDescriptionValidation,
     titleValidation
@@ -49,7 +47,6 @@ postsRouter.get('/:postId/comments',
 //(2) create new comment
 postsRouter.post('/:postId/comments',
     authMiddleWare,
-    postIdValidation,
     commentValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
