@@ -128,7 +128,6 @@ blogsRouter.get('/:blogId',
 //(6) update existing blog by blogId with InputModel
 blogsRouter.put('/:blogId',
     authorization,
-    blogIdValidationInParams,
     nameValidation,
     descriptionValidation,
     newWebSiteUrlValidation,

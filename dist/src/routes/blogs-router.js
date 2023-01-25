@@ -102,7 +102,7 @@ exports.blogsRouter.get('/:blogId', input_validation_middleware_1.blogIdValidati
     res.status(200).send(blog);
 }));
 //(6) update existing blog by blogId with InputModel
-exports.blogsRouter.put('/:blogId', authorization_middleware_1.authorization, input_validation_middleware_1.blogIdValidationInParams, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, input_validation_middleware_1.newWebSiteUrlValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.put('/:blogId', authorization_middleware_1.authorization, input_validation_middleware_1.nameValidation, input_validation_middleware_1.descriptionValidation, input_validation_middleware_1.newWebSiteUrlValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
