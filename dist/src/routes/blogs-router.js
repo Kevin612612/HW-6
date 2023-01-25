@@ -72,7 +72,7 @@ exports.blogsRouter.get('/:blogId/posts', (req, res) => __awaiter(void 0, void 0
     res.status(200).send(posts);
 }));
 //(4) create new post for specific blog
-exports.blogsRouter.post('/:blogId/posts', authorization_middleware_1.authorization, input_validation_middleware_1.blogIdValidationInParams, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/:blogId/posts', authorization_middleware_1.authorization, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

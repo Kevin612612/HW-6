@@ -87,7 +87,6 @@ blogsRouter.get('/:blogId/posts',
 //(4) create new post for specific blog
 blogsRouter.post('/:blogId/posts',
     authorization,
-    blogIdValidationInParams,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
