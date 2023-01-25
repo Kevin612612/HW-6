@@ -70,7 +70,6 @@ blogsRouter.post('/',
 
 //(3) returns all posts by specified blog
 blogsRouter.get('/:blogId/posts',
-    blogIdValidationInParams,
     async (req: Request, res: Response) => {
         //INPUT
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;

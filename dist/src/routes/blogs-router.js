@@ -59,7 +59,7 @@ exports.blogsRouter.post('/', authorization_middleware_1.authorization, input_va
     res.status(201).send(result);
 }));
 //(3) returns all posts by specified blog
-exports.blogsRouter.get('/:blogId/posts', input_validation_middleware_1.blogIdValidationInParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.get('/:blogId/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
     const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
