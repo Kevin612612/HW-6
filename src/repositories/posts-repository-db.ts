@@ -43,8 +43,8 @@ export const postsRepository = {
 
 
     //(4) method returns post by ID
-    async findPostById(id: string): Promise<postViewModel | undefined> {
-        const post = await postsCollection.findOne({id: id}, {projection: {_id: 0}})
+    async findPostById(postId: string): Promise<postViewModel | undefined> {
+        const post = await postsCollection.findOne({id: postId}, {projection: {_id: 0}})
         return post ? post : undefined
     },
 

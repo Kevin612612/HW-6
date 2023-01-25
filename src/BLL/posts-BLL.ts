@@ -149,7 +149,12 @@ export const postBusinessLayer = {
         const foundBlog = await blogsRepository.findBlogById(blogId)
         if (foundBlog) {
             const blogName = foundBlog.name
-            return await postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content)
+            const foundPost = await postsRepository.findPostById(postId)
+            if (foundPost) {
+                return await postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content)
+            } else {
+                return 404
+            }
         } else {
             return 404
         }

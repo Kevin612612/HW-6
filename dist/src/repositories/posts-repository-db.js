@@ -41,9 +41,9 @@ exports.postsRepository = {
         });
     },
     //(4) method returns post by ID
-    findPostById(id) {
+    findPostById(postId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield mongodb_1.postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+            const post = yield mongodb_1.postsCollection.findOne({ id: postId }, { projection: { _id: 0 } });
             return post ? post : undefined;
         });
     },
@@ -71,4 +71,3 @@ exports.postsRepository = {
         });
     }
 };
-

@@ -126,7 +126,13 @@ exports.postBusinessLayer = {
             const foundBlog = yield blogs_repository_db_1.blogsRepository.findBlogById(blogId);
             if (foundBlog) {
                 const blogName = foundBlog.name;
-                return yield posts_repository_db_1.postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content);
+                const foundPost = yield posts_repository_db_1.postsRepository.findPostById(postId);
+                if (foundPost) {
+                    return yield posts_repository_db_1.postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content);
+                }
+                else {
+                    return 404;
+                }
             }
             else {
                 return 404;
@@ -141,4 +147,3 @@ exports.postBusinessLayer = {
         });
     },
 };
-
