@@ -20,6 +20,7 @@ authRouter.post('/login',
     oneOf([usersLoginValidation1, usersEmailValidation1]),
     usersPasswordValidation,
     async (req: Request, res: Response) => {
+        // debugger
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -31,14 +32,9 @@ authRouter.post('/login',
         const loginOrEmail = req.body.loginOrEmail
         const password = req.body.password
         //BLL
-        const user = await authBusinessLayer.IsUserExist(loginOrEmail, password)
+        const userToken = await authBusinessLayer.IsUserExist(loginOrEmail, password)
         //RETURN
-        if (user) {
-            const token = await jwtService.createJWT(user)
-            res.status(201).send(token)
-        } else {
-            res.status(401)
-        }
+        res.status(201).send(userToken)
     })
 
 

@@ -15,11 +15,11 @@ const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const auth_BLL_1 = require("../BLL/auth-BLL");
 const input_validation_middleware_1 = require("../middleware/input-validation-middleware");
-const jwt_service_1 = require("../application/jwt-service");
 const authorization_middleware_1 = require("../middleware/authorization-middleware");
 exports.authRouter = (0, express_1.Router)({});
 //AUTH
 exports.authRouter.post('/login', (0, express_validator_1.oneOf)([input_validation_middleware_1.usersLoginValidation1, input_validation_middleware_1.usersEmailValidation1]), input_validation_middleware_1.usersPasswordValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // debugger
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -31,15 +31,9 @@ exports.authRouter.post('/login', (0, express_validator_1.oneOf)([input_validati
     const loginOrEmail = req.body.loginOrEmail;
     const password = req.body.password;
     //BLL
-    const user = yield auth_BLL_1.authBusinessLayer.IsUserExist(loginOrEmail, password);
+    const userToken = yield auth_BLL_1.authBusinessLayer.IsUserExist(loginOrEmail, password);
     //RETURN
-    if (user) {
-        const token = yield jwt_service_1.jwtService.createJWT(user);
-        res.status(201).send(token);
-    }
-    else {
-        res.status(401);
-    }
+    res.status(201).send(userToken);
 }));
 exports.authRouter.get('/me', authorization_middleware_1.authMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json({

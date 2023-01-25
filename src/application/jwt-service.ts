@@ -11,6 +11,7 @@ export const jwtService = {
 
     //(1) create token
     async createJWT(user: userDataModel) {
+        // debugger
         const payload = {
             userId: user.id,
             login: user.login,

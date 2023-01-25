@@ -40,6 +40,7 @@ exports.usersRepository = {
     //(4) method returns user by loginOrEmail
     findUserByLoginOrEmail(loginOrEmail) {
         return __awaiter(this, void 0, void 0, function* () {
+            // debugger
             const result = yield mongodb_1.usersCollection.findOne({ $or: [{ login: { $regex: loginOrEmail } }, { email: { $regex: loginOrEmail } }] });
             return result ? result : undefined;
         });

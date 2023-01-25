@@ -21,6 +21,7 @@ exports.jwtService = {
     //(1) create token
     createJWT(user) {
         return __awaiter(this, void 0, void 0, function* () {
+            // debugger
             const payload = {
                 userId: user.id,
                 login: user.login,
