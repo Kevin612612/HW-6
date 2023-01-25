@@ -73,7 +73,7 @@ exports.postsRepository = {
     deletePost(postId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield mongodb_1.postsCollection.deleteOne({ id: postId });
-            return result.deletedCount ? result.deletedCount === 1 : undefined;
+            return result.deletedCount === 1;
         });
     }
 };
