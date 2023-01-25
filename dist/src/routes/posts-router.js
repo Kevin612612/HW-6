@@ -25,7 +25,7 @@ const posts_BLL_1 = require("../BLL/posts-BLL");
 const authorization_middleware_1 = require("../middleware/authorization-middleware");
 exports.postsRouter = (0, express_1.Router)({});
 //(1) returns comments for specified post
-exports.postsRouter.get('/:postId/comments', input_validation_middleware_1.postsIdValidationInParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.get('/:postId/comments', input_validation_middleware_1.postIdValidation, input_validation_middleware_1.postExtractingFromParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     const postId = req.post.id;
     const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
@@ -38,7 +38,7 @@ exports.postsRouter.get('/:postId/comments', input_validation_middleware_1.posts
     res.status(200).send(allComments);
 }));
 //(2) create new comment
-exports.postsRouter.post('/:postId/comments', authorization_middleware_1.authMiddleWare, input_validation_middleware_1.postsIdValidationInParams, (0, express_validator_1.body)('content').isLength({ min: 20, max: 300 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/:postId/comments', authorization_middleware_1.authMiddleWare, input_validation_middleware_1.postIdValidation, input_validation_middleware_1.postExtractingFromParams, input_validation_middleware_1.commentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -51,10 +51,10 @@ exports.postsRouter.post('/:postId/comments', authorization_middleware_1.authMid
         return res.status(400).json(result);
     }
     //INPUT
-    const postId = req.post.id;
-    const content = req.body.content;
     const userId = req.user.id;
     const userLogin = req.user.login;
+    const postId = req.post.id;
+    const content = req.body.content;
     //BLL
     const comment = yield posts_BLL_1.postBusinessLayer.newPostedCommentByPostId(postId, content, userId, userLogin);
     //RETURN
@@ -73,7 +73,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     res.status(200).send(allPosts);
 }));
 //(4) create new post
-exports.postsRouter.post('/', authorization_middleware_1.authorization, input_validation_middleware_1.blogsIdValidationInBody, input_validation_middleware_1.titleValidation, input_validation_middleware_1.blogIdValidationInPost, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.post('/', authorization_middleware_1.authorization, input_validation_middleware_1.blogIdValidationInBody, input_validation_middleware_1.blogExtractingFromBody, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -95,7 +95,7 @@ exports.postsRouter.post('/', authorization_middleware_1.authorization, input_va
     res.status(201).send(newPost);
 }));
 //(5) get post by postId
-exports.postsRouter.get('/:postId', input_validation_middleware_1.postsIdValidationInParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.get('/:postId', input_validation_middleware_1.postIdValidation, input_validation_middleware_1.postExtractingFromParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     const postId = req.post.id;
     //BLL
@@ -104,7 +104,7 @@ exports.postsRouter.get('/:postId', input_validation_middleware_1.postsIdValidat
     res.status(200).send(post);
 }));
 //(6) update post by postId
-exports.postsRouter.put('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.postsIdValidationInParams, input_validation_middleware_1.blogsIdValidationInBody, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.put('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.postIdValidation, input_validation_middleware_1.postExtractingFromParams, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -127,7 +127,7 @@ exports.postsRouter.put('/:postId', authorization_middleware_1.authorization, in
     res.status(204).send(post);
 }));
 //(7) delete post by postId
-exports.postsRouter.delete('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.postsIdValidationInParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.postsRouter.delete('/:postId', authorization_middleware_1.authorization, input_validation_middleware_1.postIdValidation, input_validation_middleware_1.postExtractingFromParams, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //INPUT
     const postId = req.post.id;
     //BLL

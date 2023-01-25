@@ -10,7 +10,8 @@
 import {Request, Response, Router} from "express";
 import {userBusinessLayer} from "../BLL/users-BLL";
 import {
-    usersEmailValidation, usersIdValidationInParams,
+    userIdValidation,
+    usersEmailValidation, usersIdExtractingFromParams,
     usersLoginValidation,
     usersPasswordValidation
 } from "../middleware/input-validation-middleware";
@@ -65,7 +66,8 @@ usersRouter.post('/',
 //(3) delete user bu userId
 usersRouter.delete('/:userId',
     authorization,
-    usersIdValidationInParams,
+    userIdValidation,
+    usersIdExtractingFromParams,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);

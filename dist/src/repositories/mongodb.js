@@ -52,7 +52,7 @@ function runDb() {
             //Connect the client to the server
             yield exports.client.connect();
             //Establish and verify connection
-            yield exports.client.db('blogs').command({ ping: 1 });
+            yield exports.client.db('hosting').command({ ping: 1 });
             console.log('Connected successfully to mongo server');
         }
         catch (_a) {

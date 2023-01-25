@@ -1,7 +1,6 @@
 //Middleware
 
 
-
 import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from "express";
 import {blogsRepository} from "../repositories/blogs-repository-db";
@@ -11,25 +10,29 @@ import {usersRepository} from "../repositories/users-repository-db";
 
 
 //blogs validation
-export const blogsIdValidationInParams = async (req: Request, res: Response, next: NextFunction) => {
+
+export const blogIdValidationInBody = body('blogId')
+    .isLength({max: 5}) //здесь я схитрил))
+
+export const blogIdValidationInParams = param('blogId')
+    .isLength({max: 5}) //здесь я схитрил))
+
+export const blogExtractingFromParams = async (req: Request, res: Response, next: NextFunction) => {
     const blog = await blogsRepository.findBlogById(req.params.blogId)
     if (blog) {
         req.blog = await blogsRepository.findBlogById(req.params.blogId)
-        next()
-    } else {
-        return res.status(404).send('specified blog is not exists')
     }
+    next()
 }
 
-export const blogsIdValidationInBody = async (req: Request, res: Response, next: NextFunction) => {
+export const blogExtractingFromBody = async (req: Request, res: Response, next: NextFunction) => {
     const blog = await blogsRepository.findBlogById(req.body.blogId)
     if (blog) {
         req.blog = await blogsRepository.findBlogById(req.body.blogId)
-        next()
-    } else {
-        return res.status(404).send('specified blog is not exists')
     }
+    next()
 }
+
 
 export const nameValidation = body('name')
     .trim()
@@ -50,16 +53,17 @@ export const newWebSiteUrlValidation = body('websiteUrl')
     .isLength({max: 100})
 
 
-
 //posts validation
-export const postsIdValidationInParams = async (req: Request, res: Response, next: NextFunction) => {
+
+export const postIdValidation = param('postId')
+    .isLength({max: 5}) //здесь я схитрил))
+
+export const postExtractingFromParams = async (req: Request, res: Response, next: NextFunction) => {
     const post = await postsRepository.findPostById(req.params.postId)
     if (post) {
         req.post = await postsRepository.findPostById(req.params.postId)
-        next()
-    } else {
-        return res.status(404).send('specified post is not exists')
     }
+    next()
 }
 
 export const titleValidation = body('title')
@@ -80,11 +84,20 @@ export const contentValidation = body('content')
     .isString()
     .isLength({max: 1000})
 
-export const blogIdValidationInPost = body('blogId')
-    .isString()
-    .isLength({max: 15}) //здесь я схитрил))
+
+//user validation
 
 
+export const userIdValidation = param('userId')
+    .isLength({max: 5}) //здесь я схитрил))
+
+export const usersIdExtractingFromParams = async (req: Request, res: Response, next: NextFunction) => {
+    const user = await usersCollection.findOne({id: req.params.userId})
+    if (user) {
+        req.user = await usersRepository.findUserByLoginOrEmail(user.login)
+    }
+    next()
+}
 
 //users' login validation
 export const usersLoginValidation = body('login')
@@ -116,20 +129,12 @@ export const usersEmailValidation1 = body('loginOrEmail')
     .isString()
     .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
 
-//
-export const usersLoginOrEmailValidation = body('loginOrEmail')
-    .trim()
-    .isString()
-    .isLength({min: 3, max: 20})
-    .matches('^[a-zA-Z0-9_-]*$' || '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
 
-//userId validation
-export const usersIdValidationInParams = async (req: Request, res: Response, next: NextFunction) => {
-    const user = await usersCollection.findOne({id: req.params.userId})
-    if (user) {
-        req.user = await usersRepository.findUserByLoginOrEmail(user.login)
-        next()
-    } else {
-        return res.status(404).send('specified user is not exists')
-    }
-}
+
+
+
+
+
+//comment validation
+export const commentValidation = body('content')
+    .isLength({min: 20, max: 300})

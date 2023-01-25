@@ -78,7 +78,7 @@ exports.userBusinessLayer = {
                 passwordHash,
                 createdAt: new Date()
             };
-            yield users_repository_db_1.usersRepository.newPostedUser(newUser);
+            const result = yield users_repository_db_1.usersRepository.newPostedUser(newUser);
             return {
                 id: newUser.id,
                 login: newUser.login,
@@ -90,7 +90,8 @@ exports.userBusinessLayer = {
     //(3) method deletes by ID
     deleteUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield users_repository_db_1.usersRepository.deleteUser(userId);
+            const result = yield users_repository_db_1.usersRepository.deleteUser(userId);
+            return result;
         });
     },
 };

@@ -42,7 +42,9 @@ authRouter.post('/login',
     })
 
 
-authRouter.get('/me', authMiddleWare, async (req: Request, res: Response) => {
+authRouter.get('/me',
+    authMiddleWare,
+    async (req: Request, res: Response) => {
     res.status(200).json({
         email: req.user!.email,
         login: req.user!.login,

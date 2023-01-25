@@ -12,14 +12,16 @@
 
 import {Request, Response, Router} from "express";
 import {
-    blogIdValidationInPost,
-    blogsIdValidationInBody,
+    blogExtractingFromBody,
+    blogIdValidationInBody,
+    commentValidation,
     contentValidation,
-    postsIdValidationInParams,
+    postExtractingFromParams,
+    postIdValidation,
     shortDescriptionValidation,
     titleValidation
 } from "../middleware/input-validation-middleware";
-import {body, param, validationResult} from "express-validator";
+import {body, validationResult} from "express-validator";
 import {postBusinessLayer} from "../BLL/posts-BLL";
 import {authMiddleWare, authorization} from "../middleware/authorization-middleware";
 
@@ -29,7 +31,8 @@ export const postsRouter = Router({})
 
 //(1) returns comments for specified post
 postsRouter.get('/:postId/comments',
-    postsIdValidationInParams,
+    postIdValidation,
+    postExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
         const postId = req.post!.id;
@@ -47,8 +50,9 @@ postsRouter.get('/:postId/comments',
 //(2) create new comment
 postsRouter.post('/:postId/comments',
     authMiddleWare,
-    postsIdValidationInParams,
-    body('content').isLength({min: 20, max: 300}),
+    postIdValidation,
+    postExtractingFromParams,
+    commentValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);
@@ -62,10 +66,11 @@ postsRouter.post('/:postId/comments',
             return res.status(400).json(result)
         }
         //INPUT
-        const postId = req.post!.id
-        const content = req.body.content
         const userId = req.user!.id
         const userLogin = req.user!.login
+        const postId = req.post!.id
+        const content = req.body.content
+
         //BLL
         const comment = await postBusinessLayer.newPostedCommentByPostId(postId, content, userId, userLogin)
         //RETURN
@@ -90,9 +95,9 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 //(4) create new post
 postsRouter.post('/',
     authorization,
-    blogsIdValidationInBody,
+    blogIdValidationInBody,
+    blogExtractingFromBody,
     titleValidation,
-    blogIdValidationInPost,
     shortDescriptionValidation,
     contentValidation,
     async (req: Request, res: Response) => {
@@ -120,7 +125,8 @@ postsRouter.post('/',
 
 //(5) get post by postId
 postsRouter.get('/:postId',
-    postsIdValidationInParams,
+    postIdValidation,
+    postExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
         const postId = req.post!.id
@@ -134,8 +140,8 @@ postsRouter.get('/:postId',
 //(6) update post by postId
 postsRouter.put('/:postId',
     authorization,
-    postsIdValidationInParams,
-    blogsIdValidationInBody,
+    postIdValidation,
+    postExtractingFromParams,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
@@ -167,7 +173,8 @@ postsRouter.put('/:postId',
 //(7) delete post by postId
 postsRouter.delete('/:postId',
     authorization,
-    postsIdValidationInParams,
+    postIdValidation,
+    postExtractingFromParams,
     async (req: Request, res: Response) => {
     //INPUT
     const postId = req.post!.id;

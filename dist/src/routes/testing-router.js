@@ -16,13 +16,15 @@ const mongodb_1 = require("../repositories/mongodb");
 exports.testingRouter = (0, express_1.Router)({});
 //delete all-data
 exports.testingRouter.delete('/all-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result1 = yield mongodb_1.db.collection("blogs").deleteMany({});
-    const result2 = yield mongodb_1.db.collection("posts").deleteMany({});
-    const result3 = yield mongodb_1.db.collection("users").deleteMany({});
-    const result4 = yield mongodb_1.db.collection("blogs").find({}).toArray();
-    const result5 = yield mongodb_1.db.collection("posts").find({}).toArray();
-    const result6 = yield mongodb_1.db.collection("users").find({}).toArray();
-    if ((result4 === null || result4 === void 0 ? void 0 : result4.length) == 0 && (result5 === null || result5 === void 0 ? void 0 : result5.length) == 0 && (result6 === null || result6 === void 0 ? void 0 : result6.length) == 0) {
+    const a = yield mongodb_1.db.collection("blogs").deleteMany({});
+    const b = yield mongodb_1.db.collection("posts").deleteMany({});
+    const c = yield mongodb_1.db.collection("users").deleteMany({});
+    const d = yield mongodb_1.db.collection("comments").deleteMany({});
+    const result1 = yield mongodb_1.db.collection("blogs").find({}).toArray();
+    const result2 = yield mongodb_1.db.collection("posts").find({}).toArray();
+    const result3 = yield mongodb_1.db.collection("users").find({}).toArray();
+    const result4 = yield mongodb_1.db.collection("comments").find({}).toArray();
+    if ((result1 === null || result1 === void 0 ? void 0 : result1.length) == 0 && (result2 === null || result2 === void 0 ? void 0 : result2.length) == 0 && (result3 === null || result3 === void 0 ? void 0 : result3.length) == 0 && (result4 === null || result4 === void 0 ? void 0 : result4.length) == 0) {
         res.send(204);
     }
 }));

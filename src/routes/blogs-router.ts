@@ -12,16 +12,18 @@
 import {Request, Response, Router} from "express";
 import {
     descriptionValidation,
-    blogsIdValidationInParams,
     nameValidation,
     newWebSiteUrlValidation,
     titleValidation,
     shortDescriptionValidation,
-    contentValidation} from "../middleware/input-validation-middleware";
+    contentValidation,
+    blogIdValidationInParams,
+    blogExtractingFromParams, blogExtractingFromBody
+} from "../middleware/input-validation-middleware";
+import {authorization} from "../middleware/authorization-middleware";
 import {blogBusinessLayer} from "../BLL/blogs-BLL";
 import {postBusinessLayer} from "../BLL/posts-BLL";
 import {validationResult} from "express-validator";
-import {authorization} from "../middleware/authorization-middleware";
 
 export const blogsRouter = Router({})
 
@@ -66,7 +68,8 @@ blogsRouter.post('/',
 
 //(3) returns all posts by specified blog
 blogsRouter.get('/:blogId/posts',
-    blogsIdValidationInParams,
+    blogIdValidationInParams,
+    blogExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
@@ -84,7 +87,8 @@ blogsRouter.get('/:blogId/posts',
 //(4) create new post for specific blog
 blogsRouter.post('/:blogId/posts',
     authorization,
-    blogsIdValidationInParams,
+    blogIdValidationInParams,
+    blogExtractingFromBody,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
@@ -109,7 +113,8 @@ blogsRouter.post('/:blogId/posts',
 
 //(5) returns blog by blogId
 blogsRouter.get('/:blogId',
-    blogsIdValidationInParams,
+    blogIdValidationInParams,
+    blogExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
         const blogId = req.blog!.id
@@ -123,7 +128,8 @@ blogsRouter.get('/:blogId',
 //(6) update existing blog by blogId with InputModel
 blogsRouter.put('/:blogId',
     authorization,
-    blogsIdValidationInParams,
+    blogIdValidationInParams,
+    blogExtractingFromParams,
     nameValidation,
     descriptionValidation,
     newWebSiteUrlValidation,
@@ -148,7 +154,8 @@ blogsRouter.put('/:blogId',
 //(7) delete blog by blogId
 blogsRouter.delete('/:blogId',
     authorization,
-    blogsIdValidationInParams,
+    blogIdValidationInParams,
+    blogExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
         const blogId = req.blog!.id
