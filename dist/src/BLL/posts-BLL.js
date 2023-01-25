@@ -19,6 +19,7 @@ exports.postBusinessLayer = void 0;
 //(6) updatePostById
 //(7) deletePost
 const mongodb_1 = require("../repositories/mongodb");
+const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
 const comments_repository_db_1 = require("../repositories/comments-repository-db");
 let countOfPosts = 0;
@@ -27,15 +28,21 @@ exports.postBusinessLayer = {
     //(1) this method return all comments by postId
     allCommentsByPostId(postId, pageNumber, pageSize, sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sortedItems = yield comments_repository_db_1.commentsRepository.allComments(postId, sortBy, sortDirection);
-            const quantityOfDocs = yield mongodb_1.commentsCollection.countDocuments({ postId: postId });
-            return {
-                pagesCount: Math.ceil(quantityOfDocs / pageSize),
-                page: pageNumber,
-                pageSize: pageSize,
-                totalCount: quantityOfDocs,
-                items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
-            };
+            const foundPost = yield posts_repository_db_1.postsRepository.findPostById(postId);
+            if (foundPost) {
+                const sortedItems = yield comments_repository_db_1.commentsRepository.allComments(postId, sortBy, sortDirection);
+                const quantityOfDocs = yield mongodb_1.commentsCollection.countDocuments({ postId: postId });
+                return {
+                    pagesCount: Math.ceil(quantityOfDocs / pageSize),
+                    page: pageNumber,
+                    pageSize: pageSize,
+                    totalCount: quantityOfDocs,
+                    items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
+                };
+            }
+            else {
+                return 404;
+            }
         });
     },
     //(2) creates new comment by postId
@@ -43,22 +50,28 @@ exports.postBusinessLayer = {
         return __awaiter(this, void 0, void 0, function* () {
             countOfComments++;
             // const idName: string = id ? id : countOfComments.toString()
-            const newComment = {
-                id: countOfComments.toString(),
-                content: content,
-                userId: userId,
-                userLogin: userLogin,
-                createdAt: new Date(),
-                postId: postId,
-            };
-            const result = yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
-            return {
-                id: newComment.id,
-                content: newComment.content,
-                userId: newComment.userId,
-                userLogin: newComment.userLogin,
-                createdAt: newComment.createdAt
-            };
+            const foundPost = yield posts_repository_db_1.postsRepository.findPostById(postId);
+            if (foundPost) {
+                const newComment = {
+                    id: countOfComments.toString(),
+                    content: content,
+                    userId: userId,
+                    userLogin: userLogin,
+                    createdAt: new Date(),
+                    postId: postId,
+                };
+                const result = yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
+                return {
+                    id: newComment.id,
+                    content: newComment.content,
+                    userId: newComment.userId,
+                    userLogin: newComment.userLogin,
+                    createdAt: newComment.createdAt
+                };
+            }
+            else {
+                return 404;
+            }
         });
     },
     //(3) this method return all posts
@@ -76,49 +89,62 @@ exports.postBusinessLayer = {
         });
     },
     //(4) method creates post with specific blogId
-    newPostedPost(blogId, blogName, title, shortDescription, content) {
+    newPostedPost(blogId, title, shortDescription, content) {
         return __awaiter(this, void 0, void 0, function* () {
             countOfPosts++;
-            const newPost = {
-                id: countOfPosts.toString(),
-                title: title,
-                shortDescription: shortDescription,
-                blogId: blogId,
-                blogName: blogName,
-                content: content,
-                createdAt: new Date(),
-            };
-            const result = yield posts_repository_db_1.postsRepository.newPostedPost(newPost);
-            return {
-                id: newPost.id,
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                blogId: newPost.blogId,
-                blogName: newPost.blogName,
-                content: newPost.content,
-                createdAt: newPost.createdAt,
-            };
+            const blog = yield blogs_repository_db_1.blogsRepository.findBlogById(blogId);
+            if (blog) {
+                const blogName = blog.name;
+                const newPost = {
+                    id: countOfPosts.toString(),
+                    title: title,
+                    shortDescription: shortDescription,
+                    blogId: blogId,
+                    blogName: blogName,
+                    content: content,
+                    createdAt: new Date(),
+                };
+                const result = yield posts_repository_db_1.postsRepository.newPostedPost(newPost);
+                return {
+                    id: newPost.id,
+                    title: newPost.title,
+                    shortDescription: newPost.shortDescription,
+                    blogId: newPost.blogId,
+                    blogName: newPost.blogName,
+                    content: newPost.content,
+                    createdAt: newPost.createdAt,
+                };
+            }
+            else {
+                return 404;
+            }
         });
     },
     //(5) method take post by postId
     findPostById(postId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield posts_repository_db_1.postsRepository.findPostById(postId);
-            return result;
+            return result ? result : 404;
         });
     },
     //(6) method updates post by postId
-    updatePostById(postId, blogId, blogName, title, shortDescription, content) {
+    updatePostById(postId, blogId, title, shortDescription, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield posts_repository_db_1.postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content);
-            return result ? result : 404;
+            const foundBlog = yield blogs_repository_db_1.blogsRepository.findBlogById(blogId);
+            if (foundBlog) {
+                const blogName = foundBlog.name;
+                return yield posts_repository_db_1.postsRepository.updatePostById(postId, blogId, blogName, title, shortDescription, content);
+            }
+            else {
+                return 404;
+            }
         });
     },
     //(7) method deletes by postId
     deletePost(postId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield posts_repository_db_1.postsRepository.deletePost(postId);
-            return result;
+            return result ? result : 404;
         });
     },
 };

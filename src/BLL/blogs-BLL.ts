@@ -77,15 +77,20 @@ export const blogBusinessLayer = {
                            pageSize: number,
                            sortBy: any,
                            sortDirection: any): Promise<PostsTypeSchema | number> {
-        const sortedItems = await postsRepository.allPosts(blogId, sortBy, sortDirection);
-        const quantityOfDocs = await postsCollection.countDocuments({blogId: blogId})
+        const foundBlog = await blogsRepository.findBlogById(blogId)
+        if (foundBlog) {
+            const sortedItems = await postsRepository.allPosts(blogId, sortBy, sortDirection);
+            const quantityOfDocs = await postsCollection.countDocuments({blogId: blogId})
 
-        return {
-            pagesCount: Math.ceil(quantityOfDocs / pageSize),
-            page: pageNumber,
-            pageSize: pageSize,
-            totalCount: quantityOfDocs,
-            items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
+            return {
+                pagesCount: Math.ceil(quantityOfDocs / pageSize),
+                page: pageNumber,
+                pageSize: pageSize,
+                totalCount: quantityOfDocs,
+                items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
+            }
+        } else {
+            return 404
         }
     },
 
@@ -97,7 +102,7 @@ export const blogBusinessLayer = {
 
 
     //(5) method take blog by blogId
-    async findBlogById(id: string): Promise<blogViewModel | null | number> {
+    async findBlogById(id: string): Promise<blogViewModel | number> {
         const result = await blogsRepository.findBlogById(id)
         return result ? result : 404
     },

@@ -21,7 +21,7 @@ import {
     shortDescriptionValidation,
     titleValidation
 } from "../middleware/input-validation-middleware";
-import {body, validationResult} from "express-validator";
+import {validationResult} from "express-validator";
 import {postBusinessLayer} from "../BLL/posts-BLL";
 import {authMiddleWare, authorization} from "../middleware/authorization-middleware";
 
@@ -32,10 +32,9 @@ export const postsRouter = Router({})
 //(1) returns comments for specified post
 postsRouter.get('/:postId/comments',
     postIdValidation,
-    postExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
-        const postId = req.post!.id;
+        const postId = req.params.postId
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy : "createdAt";
@@ -51,7 +50,6 @@ postsRouter.get('/:postId/comments',
 postsRouter.post('/:postId/comments',
     authMiddleWare,
     postIdValidation,
-    postExtractingFromParams,
     commentValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
@@ -68,9 +66,8 @@ postsRouter.post('/:postId/comments',
         //INPUT
         const userId = req.user!.id
         const userLogin = req.user!.login
-        const postId = req.post!.id
+        const postId = req.params.postId
         const content = req.body.content
-
         //BLL
         const comment = await postBusinessLayer.newPostedCommentByPostId(postId, content, userId, userLogin)
         //RETURN
@@ -96,7 +93,6 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 postsRouter.post('/',
     authorization,
     blogIdValidationInBody,
-    blogExtractingFromBody,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
@@ -113,11 +109,9 @@ postsRouter.post('/',
             return res.status(400).json(result)
         }
         //INPUT
-        let {title, shortDescription, content} = req.body
-        const blogId = req.blog!.id
-        const blogName = req.blog!.name
+        let {blogId, title, shortDescription, content} = req.body
         //BLL
-        const newPost = await postBusinessLayer.newPostedPost(blogId, blogName, title, shortDescription, content)
+        const newPost = await postBusinessLayer.newPostedPost(blogId, title, shortDescription, content)
         //RETURN
         res.status(201).send(newPost)
     })
@@ -126,10 +120,9 @@ postsRouter.post('/',
 //(5) get post by postId
 postsRouter.get('/:postId',
     postIdValidation,
-    postExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
-        const postId = req.post!.id
+        const postId = req.params.postId
         //BLL
         const post = await postBusinessLayer.findPostById(postId)
         //RETURN
@@ -141,7 +134,7 @@ postsRouter.get('/:postId',
 postsRouter.put('/:postId',
     authorization,
     postIdValidation,
-    postExtractingFromParams,
+    blogIdValidationInBody,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
@@ -158,13 +151,11 @@ postsRouter.put('/:postId',
             return res.status(400).json(result)
         }
         //INPUT
-        const postId = req.post!.id
-        const blogId = req.blog!.id
-        const blogName = req.blog!.name
-
+        const postId = req.params.postId
+        const blogId = req.body.blogId
         let {title, shortDescription, content} = req.body
         //BLL
-        const post = await postBusinessLayer.updatePostById(postId, blogId, blogName, title, shortDescription, content)
+        const post = await postBusinessLayer.updatePostById(postId, blogId, title, shortDescription, content)
         //RETURN
         res.status(204).send(post)
     })
@@ -174,10 +165,9 @@ postsRouter.put('/:postId',
 postsRouter.delete('/:postId',
     authorization,
     postIdValidation,
-    postExtractingFromParams,
     async (req: Request, res: Response) => {
     //INPUT
-    const postId = req.post!.id;
+    const postId = req.params.postId
     //BLL
     const result = await postBusinessLayer.deletePost(postId)
     //RETURN

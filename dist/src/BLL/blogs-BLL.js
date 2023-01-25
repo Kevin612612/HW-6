@@ -62,15 +62,21 @@ exports.blogBusinessLayer = {
     //(3) this method return all posts by blogId
     allPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection) {
         return __awaiter(this, void 0, void 0, function* () {
-            const sortedItems = yield posts_repository_db_1.postsRepository.allPosts(blogId, sortBy, sortDirection);
-            const quantityOfDocs = yield mongodb_1.postsCollection.countDocuments({ blogId: blogId });
-            return {
-                pagesCount: Math.ceil(quantityOfDocs / pageSize),
-                page: pageNumber,
-                pageSize: pageSize,
-                totalCount: quantityOfDocs,
-                items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
-            };
+            const foundBlog = yield blogs_repository_db_1.blogsRepository.findBlogById(blogId);
+            if (foundBlog) {
+                const sortedItems = yield posts_repository_db_1.postsRepository.allPosts(blogId, sortBy, sortDirection);
+                const quantityOfDocs = yield mongodb_1.postsCollection.countDocuments({ blogId: blogId });
+                return {
+                    pagesCount: Math.ceil(quantityOfDocs / pageSize),
+                    page: pageNumber,
+                    pageSize: pageSize,
+                    totalCount: quantityOfDocs,
+                    items: sortedItems.slice((pageNumber - 1) * (pageSize), (pageNumber) * (pageSize))
+                };
+            }
+            else {
+                return 404;
+            }
         });
     },
     //(4) method create new post by blogId

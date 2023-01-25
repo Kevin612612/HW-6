@@ -17,9 +17,7 @@ import {
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
-    blogIdValidationInParams,
-    blogExtractingFromParams, blogExtractingFromBody
-} from "../middleware/input-validation-middleware";
+    blogIdValidationInParams} from "../middleware/input-validation-middleware";
 import {authorization} from "../middleware/authorization-middleware";
 import {blogBusinessLayer} from "../BLL/blogs-BLL";
 import {postBusinessLayer} from "../BLL/posts-BLL";
@@ -54,7 +52,11 @@ blogsRouter.post('/',
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const errs = errors.array({onlyFirstError: true})
-            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            const result = {
+                errorsMessages: errs.map(e => {
+                    return {message: e.msg, field: e.param}
+                })
+            }
             return res.status(400).json(result)
         }
         //INPUT
@@ -69,14 +71,13 @@ blogsRouter.post('/',
 //(3) returns all posts by specified blog
 blogsRouter.get('/:blogId/posts',
     blogIdValidationInParams,
-    blogExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy : "createdAt";
         const sortDirection = req.query.sortDirection ? req.query.sortDirection : "desc";
-        const blogId = req.blog!.id
+        const blogId = req.params.blogId
         //BLL
         const posts = await blogBusinessLayer.allPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection)
         //RETURN
@@ -88,7 +89,6 @@ blogsRouter.get('/:blogId/posts',
 blogsRouter.post('/:blogId/posts',
     authorization,
     blogIdValidationInParams,
-    blogExtractingFromBody,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
@@ -97,15 +97,18 @@ blogsRouter.post('/:blogId/posts',
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const errs = errors.array({onlyFirstError: true})
-            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            const result = {
+                errorsMessages: errs.map(e => {
+                    return {message: e.msg, field: e.param}
+                })
+            }
             return res.status(400).json(result)
         }
         //INPUT
-        const blogId = req.blog!.id
-        const blogName = req.blog!.name
+        const blogId = req.params.blogId
         let {title, shortDescription, content} = req.body
         //BLL
-        const post = await postBusinessLayer.newPostedPost(blogId, blogName, title, shortDescription, content)
+        const post = await postBusinessLayer.newPostedPost(blogId, title, shortDescription, content)
         //RETURN
         res.status(201).send(post)
     })
@@ -114,10 +117,9 @@ blogsRouter.post('/:blogId/posts',
 //(5) returns blog by blogId
 blogsRouter.get('/:blogId',
     blogIdValidationInParams,
-    blogExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
-        const blogId = req.blog!.id
+        const blogId = req.params.blogId
         //BLL
         const blog = await blogBusinessLayer.findBlogById(blogId)
         //RETURN
@@ -129,7 +131,6 @@ blogsRouter.get('/:blogId',
 blogsRouter.put('/:blogId',
     authorization,
     blogIdValidationInParams,
-    blogExtractingFromParams,
     nameValidation,
     descriptionValidation,
     newWebSiteUrlValidation,
@@ -138,11 +139,15 @@ blogsRouter.put('/:blogId',
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const errs = errors.array({onlyFirstError: true})
-            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
+            const result = {
+                errorsMessages: errs.map(e => {
+                    return {message: e.msg, field: e.param}
+                })
+            }
             return res.status(400).json(result)
         }
         //INPUT
-        const blogId = req.blog!.id
+        const blogId = req.params.blogId
         let {name, description, websiteUrl} = req.body
         //BLL
         const result = await blogBusinessLayer.updateBlogById(blogId, name, description, websiteUrl)
@@ -155,10 +160,9 @@ blogsRouter.put('/:blogId',
 blogsRouter.delete('/:blogId',
     authorization,
     blogIdValidationInParams,
-    blogExtractingFromParams,
     async (req: Request, res: Response) => {
         //INPUT
-        const blogId = req.blog!.id
+        const blogId = req.params.blogId
         //BLL
         const result = await blogBusinessLayer.deleteBlog(blogId)
         //RETURN
