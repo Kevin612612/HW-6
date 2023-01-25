@@ -5,7 +5,7 @@
 //(2) method returns user by token
 
 import jwt from 'jsonwebtoken'
-import {userDataModel} from "../repositories/mongodb";
+import {userDataModel} from "../types";
 
 export const jwtService = {
 

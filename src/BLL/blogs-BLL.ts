@@ -13,11 +13,10 @@ import {
     blogViewModel,
     blogsTypeSchema,
     PostsTypeSchema,
-    blogsCollection,
-    postsCollection,
-} from "../repositories/mongodb";
+} from "../types";
 import {blogsRepository} from "../repositories/blogs-repository-db";
 import {postsRepository} from "../repositories/posts-repository-db";
+import {blogsCollection, postsCollection} from "../repositories/mongodb";
 
 let countOfBlogs = 0
 

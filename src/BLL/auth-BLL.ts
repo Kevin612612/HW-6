@@ -6,7 +6,7 @@
 
 import {usersRepository} from "../repositories/users-repository-db";
 import bcrypt from "bcrypt";
-import {userDataModel} from "../repositories/mongodb";
+import {userDataModel} from "../types";
 
 
 export const authBusinessLayer = {

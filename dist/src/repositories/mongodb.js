@@ -37,7 +37,6 @@ exports.runDb = exports.commentsCollection = exports.usersCollection = exports.p
 const mongodb_1 = require("mongodb");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-//======================================================================================================================
 //connection to mongodb
 const mongoUri = process.env.MONGO_URL; // || "mongodb://0.0.0.0:27017";
 exports.client = new mongodb_1.MongoClient(mongoUri);

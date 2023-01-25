@@ -5,9 +5,10 @@
 //(2) newPostedUser
 //(3) deleteUser
 
-import {userViewModel, UsersTypeSchema, usersCollection} from "../repositories/mongodb";
+import {userViewModel, UsersTypeSchema} from "../types";
 import {usersRepository} from "../repositories/users-repository-db";
 import bcrypt from "bcrypt"
+import {usersCollection} from "../repositories/mongodb";
 
 let countOfUsers = 0
 

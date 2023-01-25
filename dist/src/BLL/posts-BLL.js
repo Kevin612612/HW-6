@@ -11,17 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postBusinessLayer = void 0;
-//(1) allCommentsByPostId
-//(2) newPostedCommentByPostId
-//(3) allPosts
-//(4) newPostedPost
-//(5) findPostById
-//(6) updatePostById
-//(7) deletePost
-const mongodb_1 = require("../repositories/mongodb");
 const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
 const comments_repository_db_1 = require("../repositories/comments-repository-db");
+const mongodb_1 = require("../repositories/mongodb");
 let countOfPosts = 0;
 let countOfComments = 0;
 exports.postBusinessLayer = {

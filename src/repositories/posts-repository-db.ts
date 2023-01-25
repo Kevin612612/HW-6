@@ -8,7 +8,8 @@
 //(5) updatePostById
 //(6) deletePost
 
-import {postsCollection, postViewModel} from "./mongodb";
+import {postViewModel} from "../types";
+import {postsCollection} from "./mongodb";
 
 
 export const postsRepository = {

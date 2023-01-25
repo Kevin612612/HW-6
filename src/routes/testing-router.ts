@@ -3,7 +3,8 @@
 
 
 import {Request, Response, Router} from "express";
-import {blogViewModel, commentViewModel, db, postViewModel, userViewModel} from "../repositories/mongodb";
+import {blogViewModel, commentViewModel, postViewModel, userViewModel} from "../types";
+import {db} from "../repositories/mongodb";
 
 export const testingRouter = Router({})
 

@@ -11,10 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersRepository = void 0;
-//(1) allUsers
-//(2) newPostedUser
-//(3) deleteUser
-//(4) findUserByLoginOrEmail
 const mongodb_1 = require("./mongodb");
 exports.usersRepository = {
     //(1) method returns array of users

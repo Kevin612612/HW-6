@@ -7,7 +7,8 @@
 //(3) deleteUser
 //(4) findUserByLoginOrEmail
 
-import {userDataModel, usersCollection, userViewModel} from "./mongodb";
+import {userDataModel, userViewModel} from "../types";
+import {usersCollection} from "./mongodb";
 
 
 export const usersRepository = {

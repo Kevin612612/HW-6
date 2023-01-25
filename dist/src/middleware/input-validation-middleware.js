@@ -14,8 +14,8 @@ exports.commentValidation = exports.usersEmailValidation1 = exports.usersEmailVa
 const express_validator_1 = require("express-validator");
 const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
-const mongodb_1 = require("../repositories/mongodb");
 const users_repository_db_1 = require("../repositories/users-repository-db");
+const mongodb_1 = require("../repositories/mongodb");
 //blogs validation
 exports.blogIdValidationInBody = (0, express_validator_1.body)('blogId')
     .isLength({ max: 5 }); //здесь я схитрил))

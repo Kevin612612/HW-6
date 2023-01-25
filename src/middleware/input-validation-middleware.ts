@@ -5,8 +5,8 @@ import {body, param} from 'express-validator'
 import {NextFunction, Request, Response} from "express";
 import {blogsRepository} from "../repositories/blogs-repository-db";
 import {postsRepository} from "../repositories/posts-repository-db";
-import {usersCollection} from "../repositories/mongodb";
 import {usersRepository} from "../repositories/users-repository-db";
+import {usersCollection} from "../repositories/mongodb";
 
 
 //blogs validation
@@ -86,8 +86,6 @@ export const contentValidation = body('content')
 
 
 //user validation
-
-
 export const userIdValidation = param('userId')
     .isLength({max: 5}) //здесь я схитрил))
 
@@ -128,11 +126,6 @@ export const usersEmailValidation1 = body('loginOrEmail')
     .trim()
     .isString()
     .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
-
-
-
-
-
 
 
 //comment validation

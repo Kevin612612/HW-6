@@ -1,7 +1,8 @@
 //Data access Layer
 
 
-import {blogViewModel} from "../mongodb";
+
+import {blogViewModel} from "../../types";
 
 export let blogs: Array<blogViewModel> = [
     {

@@ -11,16 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogBusinessLayer = void 0;
-//(1) allBlogs
-//(2) newPostedBlog
-//(3) allPostsByBlogId
-//(4) newPostedPostByBlogId
-//(5) findBlogById
-//(6) updateBlogById
-//(7) deleteBlog
-const mongodb_1 = require("../repositories/mongodb");
 const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
+const mongodb_1 = require("../repositories/mongodb");
 let countOfBlogs = 0;
 exports.blogBusinessLayer = {
     //(1) this method transform all found data and returns them to router

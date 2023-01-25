@@ -11,11 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepository = void 0;
-//(1) allBlogs
-//(2) newPostedBlog
-//(3) findBlogById
-//(4) updateBlogById
-//(5) deleteBlog
 const mongodb_1 = require("./mongodb");
 exports.blogsRepository = {
     //(1) method returns structured Array

@@ -11,11 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentsRepository = void 0;
-//(1) allComments
-//(2) newPostedComment
-//(3) updateCommentById
-//(4) deleteComment
-//(5) findCommentById
 const mongodb_1 = require("./mongodb");
 exports.commentsRepository = {
     //(1) method returns comments by postId

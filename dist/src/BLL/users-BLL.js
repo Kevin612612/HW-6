@@ -14,12 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userBusinessLayer = void 0;
-//(1) allUsers
-//(2) newPostedUser
-//(3) deleteUser
-const mongodb_1 = require("../repositories/mongodb");
 const users_repository_db_1 = require("../repositories/users-repository-db");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const mongodb_1 = require("../repositories/mongodb");
 let countOfUsers = 0;
 exports.userBusinessLayer = {
     //(1) this method returns all users to router

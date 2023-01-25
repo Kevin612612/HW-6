@@ -12,13 +12,13 @@
 import {
     postViewModel,
     PostsTypeSchema,
-    postsCollection,
     CommentsTypeSchema,
-    commentsCollection, blogViewModel, commentViewModel
-} from "../repositories/mongodb";
+    commentViewModel
+} from "../types";
 import {blogsRepository} from "../repositories/blogs-repository-db";
 import {postsRepository} from "../repositories/posts-repository-db";
 import {commentsRepository} from "../repositories/comments-repository-db";
+import {commentsCollection, postsCollection} from "../repositories/mongodb";
 
 let countOfPosts = 0
 let countOfComments = 0
