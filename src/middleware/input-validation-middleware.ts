@@ -2,7 +2,7 @@
 
 
 
-import {body, param} from 'express-validator'
+import {body, param, header} from 'express-validator'
 import {NextFunction, Request, Response} from "express";
 import {blogsRepository} from "../repositories/blogs-repository-db";
 import {postsRepository} from "../repositories/posts-repository-db";
@@ -132,3 +132,6 @@ export const usersEmailValidation1 = body('loginOrEmail')
 //comment validation
 export const commentValidation = body('content')
     .isLength({min: 20, max: 300})
+
+//token validation
+export const tokenValidation = header('authorization')

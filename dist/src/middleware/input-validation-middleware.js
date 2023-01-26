@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.commentValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.usersIdExtractingFromParams = exports.userIdValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postExtractingFromParams = exports.postIdValidation = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogExtractingFromBody = exports.blogExtractingFromParams = exports.blogIdValidationInParams = exports.blogIdValidationInBody = void 0;
+exports.tokenValidation = exports.commentValidation = exports.usersEmailValidation1 = exports.usersEmailValidation = exports.usersPasswordValidation = exports.usersLoginValidation1 = exports.usersLoginValidation = exports.usersIdExtractingFromParams = exports.userIdValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.postExtractingFromParams = exports.postIdValidation = exports.newWebSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.blogExtractingFromBody = exports.blogExtractingFromParams = exports.blogIdValidationInParams = exports.blogIdValidationInBody = void 0;
 const express_validator_1 = require("express-validator");
 const blogs_repository_db_1 = require("../repositories/blogs-repository-db");
 const posts_repository_db_1 = require("../repositories/posts-repository-db");
@@ -117,3 +117,5 @@ exports.usersEmailValidation1 = (0, express_validator_1.body)('loginOrEmail')
 //comment validation
 exports.commentValidation = (0, express_validator_1.body)('content')
     .isLength({ min: 20, max: 300 });
+//token validation
+exports.tokenValidation = (0, express_validator_1.header)('authorization');

@@ -23,7 +23,8 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
 export const authMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
     const auth = req.headers.authorization
     const typeOfAuth = req.headers.authorization?.split(' ')[0].trim()
-    if (!auth || typeOfAuth != 'Bearer') { //token is absent in headers
+    const dotInToken = req.headers.authorization?.split(' ')[1].trim().includes('.')
+    if (!auth || typeOfAuth != 'Bearer' || !dotInToken) { //token is absent in headers
         res.sendStatus(401)
         return
     }

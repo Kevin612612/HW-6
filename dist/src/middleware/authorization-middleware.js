@@ -25,10 +25,11 @@ const authorization = (req, res, next) => {
 exports.authorization = authorization;
 //Bearer Authorization
 const authMiddleWare = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     const auth = req.headers.authorization;
     const typeOfAuth = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[0].trim();
-    if (!auth || typeOfAuth != 'Bearer') { //token is absent in headers
+    const dotInToken = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1].trim().includes('.');
+    if (!auth || typeOfAuth != 'Bearer' || !dotInToken) { //token is absent in headers
         res.sendStatus(401);
         return;
     }
