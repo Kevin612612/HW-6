@@ -17,7 +17,7 @@ export const commentsRepository = {
     async allComments(postId: string, sortBy: any, sortDirection: any): Promise<commentViewModel[]> {
         const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
         return await commentsCollection
-            .find({postId: postId})
+            .find({postId: postId}, {projection: {_id: 0, postId: 0}})
             .sort(sortBy, order)
             .toArray();
     },

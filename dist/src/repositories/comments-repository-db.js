@@ -18,7 +18,7 @@ exports.commentsRepository = {
         return __awaiter(this, void 0, void 0, function* () {
             const order = sortDirection === 'asc' ? 1 : -1; // порядок сортировки
             return yield mongodb_1.commentsCollection
-                .find({ postId: postId })
+                .find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
                 .sort(sortBy, order)
                 .toArray();
         });
