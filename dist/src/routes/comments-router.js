@@ -21,7 +21,7 @@ const authorization_middleware_1 = require("../middleware/authorization-middlewa
 const input_validation_middleware_1 = require("../middleware/input-validation-middleware");
 exports.commentsRouter = (0, express_1.Router)({});
 //(1) update comments
-exports.commentsRouter.put('/:commentId', authorization_middleware_1.authMiddleWare, input_validation_middleware_1.contentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.commentsRouter.put('/:commentId', authorization_middleware_1.authMiddleWare, input_validation_middleware_1.commentValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {

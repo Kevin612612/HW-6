@@ -10,14 +10,14 @@ import {Request, Response, Router} from "express";
 import {validationResult} from "express-validator";
 import {commentsBusinessLayer} from "../BLL/comments-BLL";
 import {authMiddleWare, authorization} from "../middleware/authorization-middleware";
-import {contentValidation} from "../middleware/input-validation-middleware";
+import {commentValidation, contentValidation} from "../middleware/input-validation-middleware";
 
 export const commentsRouter = Router({})
 
 //(1) update comments
 commentsRouter.put('/:commentId',
     authMiddleWare,
-    contentValidation,
+    commentValidation,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);

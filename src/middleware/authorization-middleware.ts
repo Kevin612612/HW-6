@@ -21,11 +21,13 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
 
 //Bearer Authorization
 export const authMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.headers.authorization) { //token is absent in headers
+    const auth = req.headers.authorization
+    const typeOfAuth = req.headers.authorization?.split(' ')[0]
+    if (typeOfAuth != 'bearer' || auth == undefined) { //token is absent in headers
         res.sendStatus(401)
         return
     }
-    const token = req.headers.authorization.split(' ')[1]  //token is in headers: 'bearer algorithmSecretKey.payload.kindOfHash'
+    const token = req.headers.authorization!.split(' ')[1]  //token is in headers: 'bearer algorithmSecretKey.payload.kindOfHash'
     const userDecoded = await jwtService.getUserByToken(token) //get user from payload
     if (userDecoded) {
         req.user = await usersRepository.findUserByLoginOrEmail(userDecoded.login) //get user from db by user.login and take it into body
