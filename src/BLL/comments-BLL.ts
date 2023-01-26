@@ -11,9 +11,19 @@ import {commentViewModel} from "../types";
 export const commentsBusinessLayer = {
 
     //(1) method updates comment by ID
-    async updateCommentById(id: string, content: string): Promise<boolean | number> {
-        const result = await commentsRepository.updateCommentById(id, content)
-        return result ? result : 404
+    async updateCommentById(commentId: string, userId: string, content: string): Promise<boolean | number> {
+        //check if it is your account
+        const comment = await commentsRepository.findCommentById(commentId)
+        if (comment) {
+            if (comment.commentatorInfo.userId == userId) {
+                const result = await commentsRepository.updateCommentById(commentId, content)
+                return 204
+            } else {
+                return 403
+            }
+        } else {
+            return 404
+        }
     },
 
 

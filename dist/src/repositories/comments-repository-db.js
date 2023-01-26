@@ -31,9 +31,9 @@ exports.commentsRepository = {
         });
     },
     //(3) method update comment by Id
-    updateCommentById(id, content) {
+    updateCommentById(commentId, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield mongodb_1.commentsCollection.updateOne({ id: id }, {
+            const result = yield mongodb_1.commentsCollection.updateOne({ id: commentId }, {
                 $set: {
                     content: content
                 }

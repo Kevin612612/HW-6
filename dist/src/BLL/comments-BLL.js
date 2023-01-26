@@ -17,10 +17,22 @@ exports.commentsBusinessLayer = void 0;
 const comments_repository_db_1 = require("../repositories/comments-repository-db");
 exports.commentsBusinessLayer = {
     //(1) method updates comment by ID
-    updateCommentById(id, content) {
+    updateCommentById(commentId, userId, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield comments_repository_db_1.commentsRepository.updateCommentById(id, content);
-            return result ? result : 404;
+            //check if it is your account
+            const comment = yield comments_repository_db_1.commentsRepository.findCommentById(commentId);
+            if (comment) {
+                if (comment.commentatorInfo.userId == userId) {
+                    const result = yield comments_repository_db_1.commentsRepository.updateCommentById(commentId, content);
+                    return 204;
+                }
+                else {
+                    return 403;
+                }
+            }
+            else {
+                return 404;
+            }
         });
     },
     //(2) method deletes comment by ID

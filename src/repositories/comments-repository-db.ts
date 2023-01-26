@@ -31,8 +31,8 @@ export const commentsRepository = {
 
 
     //(3) method update comment by Id
-    async updateCommentById(id: string, content: string): Promise<boolean | number> {
-        const result = await commentsCollection.updateOne({id: id}, {
+    async updateCommentById(commentId: string, content: string): Promise<boolean | number> {
+        const result = await commentsCollection.updateOne({id: commentId}, {
             $set: {
                 content: content
             }
