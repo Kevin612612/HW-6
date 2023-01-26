@@ -51,7 +51,7 @@ exports.commentsRepository = {
     //(5) method returns comment by Id
     findCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield mongodb_1.commentsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+            const result = yield mongodb_1.commentsCollection.findOne({ id: id }, { projection: { _id: 0, postId: 0 } });
             return result ? result : undefined;
         });
     },

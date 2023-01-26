@@ -11,7 +11,7 @@
 import {Request, Response, Router} from "express";
 import {validationResult} from "express-validator";
 import {commentsBusinessLayer} from "../BLL/comments-BLL";
-import {authorization} from "../middleware/authorization-middleware";
+import {authMiddleWare, authorization} from "../middleware/authorization-middleware";
 
 export const commentsRouter = Router({})
 
@@ -39,21 +39,21 @@ commentsRouter.put('/:commentId',
 
 //(2) delete comments
 commentsRouter.delete('/:commentId',
-    authorization,
+    authMiddleWare,
     async (req: Request, res: Response) => {
         //COLLECTION of ERRORS
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const errs = errors.array({onlyFirstError: true})
             const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
-            return res.status(400).json(result)
+            return res.sendStatus(400).json(result)
         }
         //INPUT
-        const id = req.params.blogId;
+        const commentId = req.params.commentId;
         //BLL
-        const comment = await commentsBusinessLayer.deleteComment(id)
+        const comment = await commentsBusinessLayer.deleteComment(commentId)
         //RETURN
-        res.status(204).send(comment)
+        res.sendStatus(204).send(comment)
     })
 
 

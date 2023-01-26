@@ -55,11 +55,11 @@ exports.postBusinessLayer = {
                 };
                 const result = yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
                 return {
-                    id: newComment.id,
                     content: newComment.content,
+                    createdAt: newComment.createdAt,
+                    id: newComment.id,
                     userId: newComment.userId,
                     userLogin: newComment.userLogin,
-                    createdAt: newComment.createdAt
                 };
             }
             else {

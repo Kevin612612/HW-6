@@ -43,7 +43,7 @@ export const commentsRepository = {
 
 
     //(4) method delete comment by Id
-    async deleteComment(id: string): Promise<boolean | number> {
+    async deleteComment(id: string): Promise<boolean> {
         const result = await commentsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
@@ -52,7 +52,7 @@ export const commentsRepository = {
 
     //(5) method returns comment by Id
     async findCommentById(id: string): Promise<commentViewModel | undefined> {
-        const result = await commentsCollection.findOne({id: id}, {projection: {_id: 0}})
+        const result = await commentsCollection.findOne({id: id}, {projection: {_id: 0, postId: 0}})
         return result ? result : undefined
     },
 }

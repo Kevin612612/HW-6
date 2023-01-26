@@ -69,11 +69,11 @@ export const postBusinessLayer = {
             const result = await commentsRepository.newPostedComment(newComment)
 
             return {
-                id: newComment.id,
                 content: newComment.content,
+                createdAt: newComment.createdAt,
+                id: newComment.id,
                 userId: newComment.userId,
                 userLogin: newComment.userLogin,
-                createdAt: newComment.createdAt
             }
         } else {
             return 404

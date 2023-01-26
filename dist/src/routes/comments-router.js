@@ -37,20 +37,20 @@ exports.commentsRouter.put('/:commentId', authorization_middleware_1.authorizati
     res.status(204).send(comment);
 }));
 //(2) delete comments
-exports.commentsRouter.delete('/:commentId', authorization_middleware_1.authorization, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.commentsRouter.delete('/:commentId', authorization_middleware_1.authMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //COLLECTION of ERRORS
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         const errs = errors.array({ onlyFirstError: true });
         const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
-        return res.status(400).json(result);
+        return res.sendStatus(400).json(result);
     }
     //INPUT
-    const id = req.params.blogId;
+    const commentId = req.params.commentId;
     //BLL
-    const comment = yield comments_BLL_1.commentsBusinessLayer.deleteComment(id);
+    const comment = yield comments_BLL_1.commentsBusinessLayer.deleteComment(commentId);
     //RETURN
-    res.status(204).send(comment);
+    res.sendStatus(204).send(comment);
 }));
 //(3) returns comment by Id
 exports.commentsRouter.get('/:commentId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
