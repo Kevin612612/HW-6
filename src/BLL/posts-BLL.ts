@@ -1,7 +1,6 @@
 //Business Layer
 
 
-
 //(1) allCommentsByPostId
 //(2) newPostedCommentByPostId
 //(3) allPosts
@@ -58,22 +57,26 @@ export const postBusinessLayer = {
         const foundPost = await postsRepository.findPostById(postId)
         if (foundPost) {
             const newComment = {
-                id: countOfComments.toString(),
+                commentatorInfo: {
+                    userId: userId,
+                    userLogin: userLogin,
+                },
                 content: content,
-                userId: userId,
-                userLogin: userLogin,
                 createdAt: new Date(),
+                id: countOfComments.toString(),
                 postId: postId,
             }
 
             const result = await commentsRepository.newPostedComment(newComment)
 
             return {
+                commentatorInfo: {
+                    userId: newComment.commentatorInfo.userId,
+                    userLogin: newComment.commentatorInfo.userLogin,
+                },
                 content: newComment.content,
                 createdAt: newComment.createdAt,
-                id: newComment.id,
-                userId: newComment.userId,
-                userLogin: newComment.userLogin,
+                id: newComment.id
             }
         } else {
             return 404
@@ -163,7 +166,7 @@ export const postBusinessLayer = {
 
     //(7) method deletes by postId
     async deletePost(postId: string): Promise<boolean | number> {
-        const result =  await postsRepository.deletePost(postId)
+        const result = await postsRepository.deletePost(postId)
         return result ? result : 404
     },
 }

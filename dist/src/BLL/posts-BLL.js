@@ -46,20 +46,24 @@ exports.postBusinessLayer = {
             const foundPost = yield posts_repository_db_1.postsRepository.findPostById(postId);
             if (foundPost) {
                 const newComment = {
-                    id: countOfComments.toString(),
+                    commentatorInfo: {
+                        userId: userId,
+                        userLogin: userLogin,
+                    },
                     content: content,
-                    userId: userId,
-                    userLogin: userLogin,
                     createdAt: new Date(),
+                    id: countOfComments.toString(),
                     postId: postId,
                 };
                 const result = yield comments_repository_db_1.commentsRepository.newPostedComment(newComment);
                 return {
+                    commentatorInfo: {
+                        userId: newComment.commentatorInfo.userId,
+                        userLogin: newComment.commentatorInfo.userLogin,
+                    },
                     content: newComment.content,
                     createdAt: newComment.createdAt,
-                    id: newComment.id,
-                    userId: newComment.userId,
-                    userLogin: newComment.userLogin,
+                    id: newComment.id
                 };
             }
             else {
