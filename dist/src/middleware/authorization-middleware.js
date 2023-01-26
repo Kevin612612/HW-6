@@ -26,7 +26,7 @@ exports.authorization = authorization;
 //Bearer Authorization
 const authMiddleWare = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.headers.authorization) { //token is absent in headers
-        res.send(401);
+        res.sendStatus(401);
         return;
     }
     const token = req.headers.authorization.split(' ')[1]; //token is in headers: 'bearer algorithmSecretKey.payload.kindOfHash'
