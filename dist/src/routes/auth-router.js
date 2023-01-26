@@ -33,7 +33,9 @@ exports.authRouter.post('/login', (0, express_validator_1.oneOf)([input_validati
     //BLL
     const userToken = yield auth_BLL_1.authBusinessLayer.IsUserExist(loginOrEmail, password);
     //RETURN
-    res.status(200).send(userToken);
+    res.status(200).send({
+        "accessToken": userToken
+    });
 }));
 exports.authRouter.get('/me', authorization_middleware_1.authMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json({
