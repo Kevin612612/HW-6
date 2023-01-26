@@ -1,8 +1,6 @@
 //Business Layer
 
 
-
-
 //(1) updateCommentById
 //(2) deleteComment
 //(3) findCommentById
@@ -19,13 +17,21 @@ export const commentsBusinessLayer = {
     },
 
 
-
     //(2) method deletes comment by ID
-    async deleteComment(id: string): Promise<boolean | number> {
-        const result = await commentsRepository.deleteComment(id)
-        return result ? result : 404
+    async deleteComment(commentId: string, userId: string): Promise<number> {
+        //check if it is your account
+        const comment = await commentsRepository.findCommentById(commentId)
+        if (comment) {
+            if (comment.commentatorInfo.userId == userId) {
+                const result = await commentsRepository.deleteComment(commentId)
+                return 204
+            } else {
+                return 403
+            }
+        } else {
+            return 404
+        }
     },
-
 
 
     //(3) method find comment by Id

@@ -41,19 +41,13 @@ commentsRouter.put('/:commentId',
 commentsRouter.delete('/:commentId',
     authMiddleWare,
     async (req: Request, res: Response) => {
-        //COLLECTION of ERRORS
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const errs = errors.array({onlyFirstError: true})
-            const result = {errorsMessages: errs.map(e => {return {message: e.msg, field: e.param}})}
-            return res.sendStatus(400).json(result)
-        }
         //INPUT
         const commentId = req.params.commentId;
+        const userId = req.user!.id
         //BLL
-        const comment = await commentsBusinessLayer.deleteComment(commentId)
+        const comment = await commentsBusinessLayer.deleteComment(commentId, userId)
         //RETURN
-        res.sendStatus(204).send(comment)
+        res.send(comment)
     })
 
 

@@ -24,10 +24,22 @@ exports.commentsBusinessLayer = {
         });
     },
     //(2) method deletes comment by ID
-    deleteComment(id) {
+    deleteComment(commentId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield comments_repository_db_1.commentsRepository.deleteComment(id);
-            return result ? result : 404;
+            //check if it is your account
+            const comment = yield comments_repository_db_1.commentsRepository.findCommentById(commentId);
+            if (comment) {
+                if (comment.commentatorInfo.userId == userId) {
+                    const result = yield comments_repository_db_1.commentsRepository.deleteComment(commentId);
+                    return 204;
+                }
+                else {
+                    return 403;
+                }
+            }
+            else {
+                return 404;
+            }
         });
     },
     //(3) method find comment by Id
