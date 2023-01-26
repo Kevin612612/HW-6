@@ -30,13 +30,8 @@ exports.authBusinessLayer = {
                 if (passwordHash == user.passwordHash) {
                     return yield jwt_service_1.jwtService.createJWT(user);
                 }
-                else {
-                    return 401;
-                }
             }
-            else {
-                return 401;
-            }
+            return undefined;
         });
     }
 };

@@ -24,7 +24,11 @@ exports.authRouter.post('/login', (0, express_validator_1.oneOf)([input_validati
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         const errs = errors.array({ onlyFirstError: true });
-        const result = { errorsMessages: errs.map(e => { return { message: e.msg, field: e.param }; }) };
+        const result = {
+            errorsMessages: errs.map(e => {
+                return { message: e.msg, field: e.param };
+            })
+        };
         return res.status(400).json(result);
     }
     //INPUT
@@ -33,9 +37,14 @@ exports.authRouter.post('/login', (0, express_validator_1.oneOf)([input_validati
     //BLL
     const userToken = yield auth_BLL_1.authBusinessLayer.IsUserExist(loginOrEmail, password);
     //RETURN
-    res.status(200).send({
-        "accessToken": userToken
-    });
+    if (userToken) {
+        res.status(200).send({
+            "accessToken": userToken
+        });
+    }
+    else {
+        res.sendStatus(401);
+    }
 }));
 exports.authRouter.get('/me', authorization_middleware_1.authMiddleWare, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json({

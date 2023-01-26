@@ -14,7 +14,7 @@ import {jwtService} from "../application/jwt-service";
 export const authBusinessLayer = {
 
     //(1) Does user exist and password correct
-    async IsUserExist(loginOrEmail: string, password: string): Promise<string | number> {
+    async IsUserExist(loginOrEmail: string, password: string): Promise<string | undefined> {
         //находим пользователя по логину или email
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         //если такой есть то сравниваем его хэш с хэшом введенного пароля
@@ -22,12 +22,9 @@ export const authBusinessLayer = {
             const passwordHash = await bcrypt.hash(password, user.passwordSalt)
             if (passwordHash == user.passwordHash) {
                 return await jwtService.createJWT(user)
-            } else {
-                return 401
             }
-        } else {
-            return 401
         }
+        return undefined
     }
 }
 
